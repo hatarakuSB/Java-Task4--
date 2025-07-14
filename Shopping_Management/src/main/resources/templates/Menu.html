@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" th:href="@{css/Menu.css}" type="text/css">
+	<title>Menu</title>
+</head>
+
+<body>
+	<div class="container">
+		<form action="?" method="get">
+			<h2>
+				<p class="fsize">メニュー</p>
+			</h2>
+			<!-- 登録完了メッセージ表示 -->
+			    <div th:if="${successMessage}">
+			        <p th:text="${successMessage}" style="color: green;"></p>
+			    </div>
+			<div class="button-grid">
+				<button type="submit" formaction="/Register">登録</button>
+				<button type="submit" formaction="/History">履歴</button>
+				<button type="submit" formaction="/Inventory">在庫</button>
+				<button type="submit" formaction="/Menu">ユーザー情報</button>
+			</div>
+		</form>
+	</div>
+</body>
+
+</html>
