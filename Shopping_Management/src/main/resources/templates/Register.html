@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>買い物登録</title>
+</head>
+
+<body>
+	<form action="#" th:action="@{/Register}" th:object="${registerForm}" method="post">
+
+		商品名<input type="text" th:field="*{ProductName}" maxlength="10" /><br>
+		<div th:if="${#fields.hasErrors('ProductName')}" th:errors="*{ProductName}"></div>
+
+		金額<input type="text" th:field="*{Amount}" maxlength="10" /><br>
+		<div th:if="${#fields.hasErrors('Amount')}" th:errors="*{Amount}"></div>
+
+		場所<input type="text" th:field="*{Place}" maxlength="10" /><br>
+		<div th:if="${#fields.hasErrors('Place')}" th:errors="*{Place}"></div>
+
+		日付<input type="datetime-local" th:field="*{BuyDate}" maxlength="10" /><br>
+		<div th:if="${#fields.hasErrors('BuyDate')}" th:errors="*{BuyDate}"></div>
+
+		<button type="submit">登録</button><button type="submit" formaction="/Menu">メニューに戻る</button>
+	</form>
+</body>
+
+</html>
