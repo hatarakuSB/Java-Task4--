@@ -26,7 +26,7 @@ public class HistoryController {
 
 	    ArrayList<LoginDTO> allItems = historyDAO.select();
 	    
-	    // ページネーション用：1ページあたり5件
+	    // ページネーション用
 	    int pageSize = 5;
 	    int start = page * pageSize;
 	    int end = Math.min(start + pageSize, allItems.size());
