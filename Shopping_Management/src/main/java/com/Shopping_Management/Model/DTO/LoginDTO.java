@@ -8,15 +8,15 @@ import lombok.Data;
 @Component
 public class LoginDTO {
 	
-	public int ID;
+	private int id;
 	
-	public String productName;
+	private String productName;
 	
-	public String amount;
+	private String amount;
 	
-	public String place;
+	private String place;
 	
-	public String buyDate;
+	private String buyDate;
 	
-	public boolean Authority;
+	private boolean authority;
 }

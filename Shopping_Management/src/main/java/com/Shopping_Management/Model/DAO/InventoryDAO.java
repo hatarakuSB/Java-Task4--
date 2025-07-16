@@ -10,8 +10,9 @@ import com.Shopping_Management.Model.DTO.LoginDTO;
 
 @Repository
 public class InventoryDAO {
-	
+
 	private Connection con = null;
+
 	/**
 	 * DBに接続する処理	
 	 */
@@ -26,35 +27,26 @@ public class InventoryDAO {
 
 	/**
 	 * todolistテーブルからデータを取得する処理
-	 * @return 全件取得した結果
+	 * @return 削除フラグが立っていないデータのみ取得
 	 */
-	public ArrayList<LoginDTO> select() {
-		// ステートメントはSQLを実行するオブジェクト
+	public ArrayList<LoginDTO> selectAll() {
 		java.sql.Statement stmt = null;
-		// リザルトセットは結果を格納するオブジェクト
 		ResultSet rs = null;
 
-		String sql = "SELECT * FROM Shopping_Management_DB.m_product";
-		ArrayList<LoginDTO> list = new ArrayList<LoginDTO>();
+		// 削除されていないデータのみ取得
+		String sql = "SELECT * FROM Shopping_Management_DB.m_product WHERE DELETE_FLAG = 0";
+		ArrayList<LoginDTO> list = new ArrayList<>();
 
 		try {
-			// DB接続のメソッドを呼び出す
 			connect();
-
-			// ステートメントを作成
 			stmt = con.createStatement();
-
-			// SQLを実行し結果をリザルトセットへ格納
 			rs = stmt.executeQuery(sql);
 
-			// 結果を1行ずつループt
 			while (rs.next()) {
 				LoginDTO dto = new LoginDTO();
-				dto.setID(rs.getInt("trade_id"));
-				dto.setProductName(rs.getString("trade_name"));
-				dto.setAmount(rs.getString("price"));
-				dto.setPlace(rs.getString("place"));
-				dto.setBuyDate(rs.getString("_date"));
+				dto.setId(rs.getInt("TRADE_ID"));
+				dto.setProductName(rs.getString("TRADE_NAME"));
+				dto.setBuyDate(rs.getString("_DATE"));
 				list.add(dto);
 			}
 		} catch (Exception e) {
@@ -70,5 +62,29 @@ public class InventoryDAO {
 		}
 
 		return list;
+	}
+
+	/**
+	 * 指定されたIDのレコードを仮削除する処理（DELETE_FLAG を 1 に更新）
+	 */
+	public void softDeleteById(int id) {
+		java.sql.PreparedStatement pstmt = null;
+		String sql = "UPDATE Shopping_Management_DB.m_product SET DELETE_FLAG = 1 WHERE TRADE_ID = ?";
+
+		try {
+			connect();
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, id);
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				con.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

@@ -10,8 +10,9 @@ import com.Shopping_Management.Model.DTO.LoginDTO;
 
 @Repository
 public class HistoryDAO {
-	
+
 	private Connection con = null;
+
 	/**
 	 * DBに接続する処理	
 	 */
@@ -50,7 +51,7 @@ public class HistoryDAO {
 			// 結果を1行ずつループt
 			while (rs.next()) {
 				LoginDTO dto = new LoginDTO();
-				dto.setID(rs.getInt("trade_id"));
+				dto.setId(rs.getInt("trade_id"));
 				dto.setProductName(rs.getString("trade_name"));
 				dto.setAmount(rs.getString("price"));
 				dto.setPlace(rs.getString("place"));
@@ -63,6 +64,50 @@ public class HistoryDAO {
 			try {
 				rs.close();
 				stmt.close();
+				con.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * 指定された日付に一致するレコードを取得するメソッド
+	 * @param date 検索する日付
+	 * @return 検索結果のリスト
+	 */
+	public ArrayList<LoginDTO> selectByDate(String date) {
+		ArrayList<LoginDTO> list = new ArrayList<>();
+		java.sql.PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		String sql = "SELECT * FROM Shopping_Management_DB.m_product WHERE DATE(_date) = ?";
+
+		try {
+			connect();
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, date);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				LoginDTO dto = new LoginDTO();
+				dto.setId(rs.getInt("trade_id"));
+				dto.setProductName(rs.getString("trade_name"));
+				dto.setAmount(rs.getString("price"));
+				dto.setPlace(rs.getString("place"));
+				dto.setBuyDate(rs.getString("_date"));
+				list.add(dto);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rs.close();
+				pstmt.close();
 				con.close();
 			} catch (Exception e) {
 				e.printStackTrace();
