@@ -1,10 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+    <meta charset="UTF-8">
+    <title>ユーザー登録</title>
 </head>
 <body>
+
+    <h2>ユーザー新規登録</h2>
+
+    <form th:action="@{/register}" th:object="${userForm}" method="post">
+        <div>
+            <label>ユーザー名：</label>
+            <input type="text" th:field="*{username}" />
+            <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
+        </div>
+
+        <div>
+            <label>パスワード：</label>
+            <input type="password" th:field="*{password}" />
+            <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+        </div>
+
+        <div>
+            <label>確認用パスワード：</label>
+            <input type="password" th:field="*{confirmPassword}" />
+            <span th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
+        </div>
+
+        <div>
+            <label>メールアドレス：</label>
+            <input type="text" th:field="*{email}" />
+            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+        </div>
+
+        <div>
+            <span th:if="${usernameError != null}" th:text="${usernameError}" style="color:red;"></span>
+        </div>
+
+        <div>
+            <button type="submit">登録</button>
+        </div>
+    </form>
+
+    <div>
+        <a th:href="@{/Login}">ログイン画面に戻る</a>
+    </div>
 
 </body>
 </html>

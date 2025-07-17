@@ -19,8 +19,10 @@
 			<div th:if="${#fields.hasErrors('loPass')}" th:errors="*{loPass}"></div>
 			<table>
 				<button type="submit">ログイン</button>
-				<button type="submit" formaction="/NewUser" onclick="return check()">新規登録</button>
 			</table>
+		</form>
+		<form th:action="@{/NewUser}" method="get">
+		    <button type="submit">新規登録</button>
 		</form>
 	</div>
 </body>

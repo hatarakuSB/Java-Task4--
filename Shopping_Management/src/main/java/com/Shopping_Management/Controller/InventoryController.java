@@ -47,8 +47,6 @@ public class InventoryController {
             for (Integer id : selectedIds) {
                 inventoryDAO.softDeleteById(id);
             }
-            //後で消す。
-            System.out.println("選択ID: " + selectedIds);
         }
         return "redirect:/Inventory";
     }

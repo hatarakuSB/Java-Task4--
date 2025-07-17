@@ -35,7 +35,9 @@
 			    </tr>
 		</tbody>
 	</table>
-
+	<form th:action="@{/Menu}" method="get">
+	    <button type="submit">メニューに戻る</button>
+	</form>
 	<!-- ページネーションボタン -->
 	<div style="margin-top: 20px;">
 	    <form th:action="@{/History}" method="get" style="display: inline;">

@@ -44,8 +44,8 @@ public class InventoryDAO {
 
 			while (rs.next()) {
 				LoginDTO dto = new LoginDTO();
-				dto.setId(rs.getInt("TRADE_ID"));
-				dto.setProductName(rs.getString("TRADE_NAME"));
+				dto.setId(rs.getInt("PRODUCT_ID"));
+			    dto.setProductName(rs.getString("TRADE_NAME"));
 				dto.setBuyDate(rs.getString("_DATE"));
 				list.add(dto);
 			}
@@ -69,7 +69,7 @@ public class InventoryDAO {
 	 */
 	public void softDeleteById(int id) {
 		java.sql.PreparedStatement pstmt = null;
-		String sql = "UPDATE Shopping_Management_DB.m_product SET DELETE_FLAG = 1 WHERE TRADE_ID = ?";
+		String sql = "UPDATE Shopping_Management_DB.m_product SET DELETE_FLAG = 1 WHERE PRODUCT_ID = ?";
 
 		try {
 			connect();
