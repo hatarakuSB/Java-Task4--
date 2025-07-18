@@ -8,7 +8,7 @@
 
     <h2>ユーザー新規登録</h2>
 
-    <form th:action="@{/register}" th:object="${userForm}" method="post">
+    <form th:action="@{/NewUser}" th:object="${userForm}" method="post">
         <div>
             <label>ユーザー名：</label>
             <input type="text" th:field="*{username}" />
@@ -25,12 +25,6 @@
             <label>確認用パスワード：</label>
             <input type="password" th:field="*{confirmPassword}" />
             <span th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
-        </div>
-
-        <div>
-            <label>メールアドレス：</label>
-            <input type="text" th:field="*{email}" />
-            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
         </div>
 
         <div>
