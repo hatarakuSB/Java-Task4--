@@ -7,9 +7,9 @@
 <body>
     <form th:action="@{/History}" method="get">
         <label for="date">買い物日付</label>
-        <input type="text" id="date" name="date" placeholder="XXXX/XX/XX">
-        <button type="submit">検索</button>
-    </form>
+		<input type="date" name="date" th:value="${searchDate}" />
+		<button type="submit">検索</button>
+	</form>
 
 	<table>
 	    <thead>
@@ -29,9 +29,15 @@
 	            <td th:text="${item.Place}">場所</td>
 	            <td th:text="${item.BuyDate}">日付</td>
 	        </tr>
-	    </tbody>
+			<!-- データがない時の表示 -->
+			    <tr th:if="${#lists.isEmpty(items)}">
+			        <td colspan="5" style="text-align: center;">検索結果なし</td>
+			    </tr>
+		</tbody>
 	</table>
-
+	<form th:action="@{/Menu}" method="get">
+	    <button type="submit">メニューに戻る</button>
+	</form>
 	<!-- ページネーションボタン -->
 	<div style="margin-top: 20px;">
 	    <form th:action="@{/History}" method="get" style="display: inline;">

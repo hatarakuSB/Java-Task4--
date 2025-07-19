@@ -12,7 +12,7 @@ public class MenuController {
 
 	@GetMapping("/Menu")
 	public String Menu(@ModelAttribute LoginForm loginForm, Model model) {
-
+		//後にフラグで権限を分ける。
 		return "Menu";
 	}
 }
