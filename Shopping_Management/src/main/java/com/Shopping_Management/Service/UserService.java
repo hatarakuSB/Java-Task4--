@@ -6,5 +6,5 @@ public interface UserService {
 	// ユーザー名が使われてるか調べる
 	 boolean isUsernameTaken(String username);   
 	// 新しいユーザーを登録する
-	 void registerNewUser(UserDTO userForm);       
+	 void registerNewUser(UserDTO userForm); 
 }
