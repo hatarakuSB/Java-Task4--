@@ -8,27 +8,33 @@
 
     <h2>ユーザー新規登録</h2>
 
+    <!-- 成功メッセージ表示 -->
+    <div th:if="${successMessage != null}">
+        <p th:text="${successMessage}"></p>
+    </div>
+
+    <!-- エラーメッセージ表示 -->
+    <div th:if="${usernameError != null}">
+        <p th:text="${usernameError}"></p>
+    </div>
+
     <form th:action="@{/NewUser}" th:object="${userForm}" method="post">
         <div>
             <label>ユーザー名：</label>
-            <input type="text" th:field="*{username}" />
+            <input type="text" th:field="*{username}" maxlength="20" />
             <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
         </div>
 
         <div>
             <label>パスワード：</label>
-            <input type="password" th:field="*{password}" />
+            <input type="password" th:field="*{password}" maxlength="6" />
             <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
         </div>
 
         <div>
             <label>確認用パスワード：</label>
-            <input type="password" th:field="*{confirmPassword}" />
+            <input type="password" th:field="*{confirmPassword}" maxlength="6" />
             <span th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
-        </div>
-
-        <div>
-            <span th:if="${usernameError != null}" th:text="${usernameError}" style="color:red;"></span>
         </div>
 
         <div>

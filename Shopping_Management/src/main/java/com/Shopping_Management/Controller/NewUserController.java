@@ -9,31 +9,46 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.Shopping_Management.Model.DAO.UserDAO;
 import com.Shopping_Management.Model.DTO.UserDTO;
 
 @Controller
 public class NewUserController {
+
+    private final UserDAO userDAO;
+
+    public NewUserController(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
+
     @GetMapping("/NewUser")
     public String showRegistrationForm(Model model) {
         model.addAttribute("userForm", new UserDTO());
         return "NewUser"; 
     }
-    // 登録処理の受け取り
+
     @PostMapping("/NewUser")
     public String registerUser(@Valid @ModelAttribute("userForm") UserDTO userForm,
                                BindingResult bindingResult,
                                Model model) {
         if (bindingResult.hasErrors()) {
-        	// 入力エラーがある場合、再表示
             return "NewUser"; 
         }
-
-        if (UserService.isUsernameTaken(userForm.getUsername())) {
+        if (userDAO.existsByUsername(userForm.getUsername())) {
+        	// ユーザー名が既に存在するか確認
             model.addAttribute("usernameError", "このユーザー名は既に使われています");
             return "NewUser";
         }
-
-        UserService.registerNewUser(userForm);
-        return "redirect:/Login"; // 登録後はログイン画面へ
+        if(!userForm.getPassword().equals(userForm.getConfirmPassword())) {
+        	//パスワードと確認用パスワードが一致しているか確認
+        	model.addAttribute("usernameError", "確認用パスワードが一致しません");
+        	return "NewUser";
+        }
+        // 新規登録処理
+        userDAO.insert(userForm);
+        // 完了メッセージ表示してフォームを再表示
+        model.addAttribute("successMessage", "登録が完了しました！");
+        model.addAttribute("userForm", new UserDTO()); 
+        return "NewUser";
+        }
     }
-}

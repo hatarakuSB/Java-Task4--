@@ -9,11 +9,11 @@ import lombok.Data;
 public class UserDTO {
 
     @NotBlank(message = "ユーザー名は必須です")
-    @Size(max = 50, message = "ユーザー名は50文字以内で入力してください")
+    @Size(max = 50, message = "ユーザー名は20文字以内で入力してください")
     private String username;
 
     @NotBlank(message = "パスワードは必須です")
-    @Size(min = 6, message = "パスワードは6文字以上で入力してください")
+    @Size(min = 6, message = "パスワードは8文字以内で入力してください")
     private String password;
 
     @NotBlank(message = "確認用パスワードは必須です")
