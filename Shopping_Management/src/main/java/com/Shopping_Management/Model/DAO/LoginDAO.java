@@ -9,45 +9,43 @@ import com.Shopping_Management.Model.DTO.LoginDTO;
 import parts.LoginForm;
 
 public class LoginDAO {
-	
+
 	private Connection con = null;
-	
-	/**
-	 * DBに接続する処理	
-	 */
+
+	// DB接続
 	public void connect() {
 		try {
-			// DBに接続
 			con = Database.getConnect();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	/**
-	 * todolistテーブルからデータを取得する処理
-	 * @return 全件取得した結果
-	 */
-	public boolean select(LoginForm loginForm) {
-		LoginDTO dto = new LoginDTO();
-		String sql = "select AUTHORITY from m_user where USER_NAME = ? and PASS_WORD = ?";
-		try {
-			// DB接続のメソッドを呼び出す
-			connect();
 
-			// ステートメントを作成
+	/**
+	 * ログイン認証し、成功したらユーザー情報（LoginDTO）を返す
+	 * @param loginForm 入力されたユーザー名・パスワード
+	 * @return ログイン成功時はLoginDTO、失敗時はnull
+	 */
+	public LoginDTO findByLoginForm(LoginForm loginForm) {
+		String sql = "SELECT USER_ID, USER_NAME, PASS_WORD, AUTHORITY, DELETE_FLAG FROM M_USER WHERE USER_NAME = ? AND PASS_WORD = ?";
+		LoginDTO dto = null;
+
+		try {
+			connect();
 			PreparedStatement stmt = con.prepareStatement(sql);
-			
-			stmt.setString(1,loginForm.getLoUser());
-			stmt.setString(2,loginForm.getLoPass());
-			
-			// SQLを実行し結果をリザルトセットへ格納
+			stmt.setString(1, loginForm.getLoUser());
+			stmt.setString(2, loginForm.getLoPass());
+
 			ResultSet rs = stmt.executeQuery();
-			
-			if(rs.next()) {
+
+			if (rs.next()) {
+				// ログイン成功 → DTOに詰めて返す
+				dto = new LoginDTO();
+				dto.setUserId(rs.getInt("USER_ID"));
+				dto.setUserName(rs.getString("USER_NAME"));
+				dto.setPassword(rs.getString("PASS_WORD"));
 				dto.setAuthority(rs.getBoolean("AUTHORITY"));
-			}
-			else {
-				dto.setAuthority(false);
+				dto.setDeleteFlag(rs.getBoolean("DELETE_FLAG"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -58,6 +56,7 @@ public class LoginDAO {
 				e.printStackTrace();
 			}
 		}
-		return dto.isAuthority();
+
+		return dto;
 	}
 }

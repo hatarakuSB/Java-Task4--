@@ -15,13 +15,15 @@
 			</h2>
 			<!-- 登録完了メッセージ表示 -->
 			    <div th:if="${successMessage}">
-			        <p th:text="${successMessage}" style="color: green;"></p>
+			        <p th:text="${successMessage}"></p>
 			    </div>
 			<div class="button-grid">
 				<button type="submit" formaction="/Register">登録</button>
 				<button type="submit" formaction="/History">履歴</button>
 				<button type="submit" formaction="/Inventory">在庫</button>
-				<button type="submit" formaction="/Menu">ユーザー情報</button>
+				<div th:if="${authority}">
+					<button type="submit" formaction="/Menu">ユーザー情報</button>
+				</div>
 			</div>
 		</form>
 	</div>

@@ -1,5 +1,6 @@
 package com.Shopping_Management.Controller;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.Shopping_Management.Model.DAO.RegisterDAO;
+import com.Shopping_Management.Model.DTO.LoginDTO;
 
 import parts.RegisterForm;
 
@@ -28,12 +30,27 @@ public class RegisterController {
 	public String submitRegisterForm(@ModelAttribute("registerForm") @Valid RegisterForm registerForm,
 			BindingResult bindingResult,
 			Model model,
-			RedirectAttributes redirectAttributes) {
-		//bindingResultで受け取ったバリデーション結果をhasErrorsでチェックする。
+			RedirectAttributes redirectAttributes,
+			HttpSession session) {  
+
+		// バリデーションチェック
 		if (bindingResult.hasErrors()) {
 			return "Register";
 		}
-		dao.register(registerForm);
+
+		// セッションからログインユーザーを取得
+		LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
+
+		// 未ログインならログイン画面へ
+		if (loginUser == null) {
+			return "redirect:/Login";
+		}
+
+		int userId = loginUser.getUserId(); // ← 登録者のID
+
+		// DAOにユーザーIDを渡して登録
+		dao.register(registerForm, userId); // ← 修正点
+
 		redirectAttributes.addFlashAttribute("successMessage", "登録が完了しました！");
 		return "redirect:/Menu";
 	}
