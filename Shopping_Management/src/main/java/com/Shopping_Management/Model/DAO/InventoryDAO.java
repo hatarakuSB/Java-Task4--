@@ -1,12 +1,13 @@
 package com.Shopping_Management.Model.DAO;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import org.springframework.stereotype.Repository;
 
-import com.Shopping_Management.Model.DTO.LoginDTO;
+import com.Shopping_Management.Model.DTO.InventoryDetailDTO;
 
 @Repository
 public class InventoryDAO {
@@ -18,7 +19,6 @@ public class InventoryDAO {
 	 */
 	public void connect() {
 		try {
-			// DBに接続
 			con = Database.getConnect();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -26,65 +26,84 @@ public class InventoryDAO {
 	}
 
 	/**
-	 * todolistテーブルからデータを取得する処理
-	 * @return 削除フラグが立っていないデータのみ取得
+	 * 表示用の在庫一覧を取得（在庫数・最新日を含む）
 	 */
-	public ArrayList<LoginDTO> selectAll() {
-		java.sql.Statement stmt = null;
+	public ArrayList<InventoryDetailDTO> selectDeletableList(int userId) {
+		PreparedStatement pstmt = null;
 		ResultSet rs = null;
+		ArrayList<InventoryDetailDTO> list = new ArrayList<>();
 
-		// 削除されていないデータのみ取得
-		String sql = "SELECT * FROM Shopping_Management_DB.m_product WHERE DELETE_FLAG = 0";
-		ArrayList<LoginDTO> list = new ArrayList<>();
-
-		try {
-			connect();
-			stmt = con.createStatement();
-			rs = stmt.executeQuery(sql);
-
-			while (rs.next()) {
-				LoginDTO dto = new LoginDTO();
-				dto.setId(rs.getInt("PRODUCT_ID"));
-			    dto.setProductName(rs.getString("TRADE_NAME"));
-				dto.setBuyDate(rs.getString("_DATE"));
-				list.add(dto);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				rs.close();
-				stmt.close();
-				con.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		return list;
-	}
-
-	/**
-	 * 指定されたIDのレコードを仮削除する処理（DELETE_FLAG を 1 に更新）
-	 */
-	public void softDeleteById(int id) {
-		java.sql.PreparedStatement pstmt = null;
-		String sql = "UPDATE Shopping_Management_DB.m_product SET DELETE_FLAG = 1 WHERE PRODUCT_ID = ?";
+		String sql = """
+			SELECT
+			    p.PRODUCT_ID,
+			    p.TRADE_NAME,
+			    COUNT(d.PRODUCT_ID) AS stock_count,
+			    MAX(d.BUY_DATE) AS latest_date
+			FROM
+			    M_PRODUCT p
+			INNER JOIN
+			    PRODUCT_DETAIL d ON p.PRODUCT_ID = d.PRODUCT_ID
+			WHERE
+			    p.DELETE_FLAG = 0
+			    AND d.DELETE_FLAG = 0
+			    AND d.USER_ID = ?
+			GROUP BY
+			    p.PRODUCT_ID, p.TRADE_NAME
+			ORDER BY
+			    latest_date DESC
+		""";
 
 		try {
 			connect();
 			pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, id);
-			pstmt.executeUpdate();
+			pstmt.setInt(1, userId);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				InventoryDetailDTO dto = new InventoryDetailDTO();
+				dto.setProductId(rs.getInt("PRODUCT_ID"));
+				dto.setProductName(rs.getString("TRADE_NAME"));
+				dto.setStockCount(rs.getInt("stock_count"));
+				dto.setLatestDate(rs.getString("latest_date"));
+				list.add(dto);
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				pstmt.close();
-				con.close();
+				if (rs != null) rs.close();
+				if (pstmt != null) pstmt.close();
+				if (con != null) con.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
+		return list;
+	}
+
+	/**
+	 * 指定されたユーザーの、指定された商品IDに該当する在庫を論理削除
+	 */
+	public void softDeleteDetailById(int productDetailId, int userId) {
+	    PreparedStatement pstmt = null;
+	    String sql = "UPDATE PRODUCT_DETAIL SET DELETE_FLAG = 1 WHERE PRODUCT_ID = ? AND USER_ID = ?";
+
+	    try {
+	        connect();
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setInt(1, productDetailId);
+	        pstmt.setInt(2, userId);
+	        pstmt.executeUpdate();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if (pstmt != null) pstmt.close();
+	            if (con != null) con.close();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
 	}
 }

@@ -4,10 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.springframework.stereotype.Repository;
+
 import com.Shopping_Management.Model.DTO.LoginDTO;
 
 import parts.LoginForm;
 
+@Repository
 public class LoginDAO {
 
 	private Connection con = null;

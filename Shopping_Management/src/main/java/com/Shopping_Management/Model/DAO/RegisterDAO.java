@@ -5,8 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import org.springframework.stereotype.Repository;
+
 import parts.RegisterForm;
 
+@Repository
 public class RegisterDAO {
 
     private Connection con = null;
@@ -34,6 +37,7 @@ public class RegisterDAO {
 
             // PRODUCT_IDを取得
             ResultSet rs = stmt1.getGeneratedKeys();
+            //初期値
             int productId = -1;
             if (rs.next()) {
                 productId = rs.getInt(1);
@@ -41,13 +45,13 @@ public class RegisterDAO {
                 throw new Exception("PRODUCT_ID の取得に失敗しました。");
             }
 
-            String sql2 = "INSERT INTO PRODUCT_DETAIL (PRODUCT_ID, PRICE, PLACE, DATE, INVENTORY, DELETE_FLAG) VALUES (?, ?, ?, ?, ?, 0)";
+            String sql2 = "INSERT INTO PRODUCT_DETAIL (PRODUCT_ID, PRICE, PLACE, BUY_DATE, DELETE_FLAG, USER_ID) VALUES (?, ?, ?, ?, 0, ?)";
             PreparedStatement stmt2 = con.prepareStatement(sql2);
             stmt2.setInt(1, productId);
             stmt2.setString(2, registerForm.getAmount());
             stmt2.setString(3, registerForm.getPlace());
             stmt2.setString(4, registerForm.getBuyDate());
-            //stmt2.setInt(5, registerForm.getInventory());
+            stmt2.setInt(5, userId); 
 
             stmt2.executeUpdate();
 

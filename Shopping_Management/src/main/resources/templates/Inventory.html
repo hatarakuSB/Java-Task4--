@@ -2,50 +2,54 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>在庫削除</title>
+    <title>在庫リスト</title>
 </head>
 <body>
-	<form th:action="@{/Inventory/Delete}" method="post">
-	<table>
-	    <thead>
-	        <tr>
-	            <th>選択</th>
-	            <th>商品名</th>
-	            <th>日付</th>
-	        </tr>
-	    </thead>
-	    <tbody>
-	        <tr th:each="item, stat : ${items}">
-	            <td>
-	              <input type="checkbox" name="selectedIds" th:value="${item.id}" />
-	            </td>
-				<td th:text="${item.productName}">商品名</td>
-				<td th:text="${item.buyDate}">日付</td>
-	        </tr>
-			<!-- 在庫がないとき -->
-			   <tr th:if="${#lists.isEmpty(items)}">
-			       <td colspan="3" style="text-align:center;">在庫が存在しません</td>
-			   </tr>
-	    </tbody>
-	</table>
-	    <button type="submit">削除</button>
-	</form>
-	<form th:action="@{/Menu}" method="get">
-	    <button type="submit">メニューに戻る</button>
-	</form>
-	<!-- ページネーションボタン -->
-	<div style="margin-top: 20px;">
-	    <form th:action="@{/Inventory}" method="get" style="display: inline;">
-	        <input type="hidden" name="page" th:value="${currentPage - 1}" />
-	        <button type="submit" th:if="${hasPrev}">前へ</button>
-	    </form>
+    <form th:action="@{/Inventory/Delete}" method="post">
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>選択</th>
+                    <th>商品名</th>
+                    <th>日付</th>
+                    <th>在庫</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="item, stat : ${items}">
+                    <td>
+                        <input type="checkbox" name="selectedIds" th:value="${item.productId}" />
+                    </td>
+                    <td th:text="${item.productName}">商品名</td>
+                    <td th:text="${item.latestDate}">日付</td>
+                    <td th:text="${item.stockCount}">在庫</td>
+                </tr>
+                <!-- 在庫がないとき -->
+                <tr th:if="${#lists.isEmpty(items)}">
+                    <td colspan="4" style="text-align:center;">在庫が存在しません</td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="submit">削除</button>
+    </form>
 
-	    <span>　ページ <span th:text="${currentPage + 1}">1</span>　</span>
+    <form th:action="@{/Menu}" method="get">
+        <button type="submit">メニューに戻る</button>
+    </form>
 
-	    <form th:action="@{/Inventory}" method="get" style="display: inline;">
-	        <input type="hidden" name="page" th:value="${currentPage + 1}" />
-	        <button type="submit" th:if="${hasNext}">次へ</button>
-	    </form>
-	</div>
+    <!-- ページネーション -->
+    <div style="margin-top: 20px;">
+        <form th:action="@{/Inventory}" method="get" style="display: inline;">
+            <input type="hidden" name="page" th:value="${currentPage - 1}" />
+            <button type="submit" th:if="${hasPrev}">前へ</button>
+        </form>
+
+        <span>　ページ <span th:text="${currentPage + 1}">1</span>　</span>
+
+        <form th:action="@{/Inventory}" method="get" style="display: inline;">
+            <input type="hidden" name="page" th:value="${currentPage + 1}" />
+            <button type="submit" th:if="${hasNext}">次へ</button>
+        </form>
+    </div>
 </body>
 </html>

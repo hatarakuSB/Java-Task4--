@@ -33,11 +33,6 @@ public class RegisterController {
 			RedirectAttributes redirectAttributes,
 			HttpSession session) {  
 
-		// バリデーションチェック
-		if (bindingResult.hasErrors()) {
-			return "Register";
-		}
-
 		// セッションからログインユーザーを取得
 		LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
 
@@ -46,11 +41,16 @@ public class RegisterController {
 			return "redirect:/Login";
 		}
 
-		int userId = loginUser.getUserId(); // ← 登録者のID
+		int userId = loginUser.getUserId(); 
+
+		// バリデーションチェック
+		if (bindingResult.hasErrors()) {
+			return "Register";
+		}
 
 		// DAOにユーザーIDを渡して登録
-		dao.register(registerForm, userId); // ← 修正点
-
+		dao.register(registerForm, userId); 
+		
 		redirectAttributes.addFlashAttribute("successMessage", "登録が完了しました！");
 		return "redirect:/Menu";
 	}
