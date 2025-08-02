@@ -1,17 +1,26 @@
 package com.Shopping_Management.Controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import jakarta.servlet.http.HttpSession;
 
-import ch.qos.logback.core.model.Model;
-import parts.LoginForm;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import com.Shopping_Management.Model.DTO.LoginDTO;
 
 @Controller
 public class MenuController {
 
 	@GetMapping("/Menu")
-	public String Menu(@ModelAttribute LoginForm loginForm, Model model) {
+	public String Menu(HttpSession session, Model model) {
+		// ログイン情報をセッションから取得
+		LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
+
+		// セッションが切れている、未ログイン → ログイン画面へリダイレクト
+		if (loginUser == null) {
+			return "redirect:/Login";
+		}
+		model.addAttribute("authority", loginUser.isAuthority());
 
 		return "Menu";
 	}

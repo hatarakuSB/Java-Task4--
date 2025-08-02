@@ -7,16 +7,15 @@ import lombok.Data;
 @Data
 @Component
 public class LoginDTO {
+
+	private int userId;
+
+	private String userName;
 	
-	public int ID;
+	private String password;
 	
-	public String productName;
+	private boolean authority;
 	
-	public String amount;
-	
-	public String place;
-	
-	public String buyDate;
-	
-	public boolean Authority;
+	private boolean deleteFlag;
+
 }

@@ -1,13 +1,75 @@
 package com.Shopping_Management.Controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
+import java.util.ArrayList;
+import java.util.List;
 
-import ch.qos.logback.core.model.Model;
+import jakarta.servlet.http.HttpSession;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.Shopping_Management.Model.DAO.InventoryDAO;
+import com.Shopping_Management.Model.DTO.InventoryDetailDTO;
+import com.Shopping_Management.Model.DTO.LoginDTO;
+
+import parts.PaginationHelper;
+
 @Controller
 public class InventoryController {
-	@PostMapping("/Inventory")
-	public String Inventory(Model model) {
-		return "Inventory.html";
+
+	private final InventoryDAO inventoryDAO;
+
+	public InventoryController(InventoryDAO inventoryDAO) {
+		this.inventoryDAO = inventoryDAO;
 	}
+
+	// 在庫一覧画面の表示（集計済みデータ）
+	@GetMapping("/Inventory")
+	public String showInventory(
+			@RequestParam(defaultValue = "0") int page,
+			Model model,
+			HttpSession session) {
+
+		LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			return "redirect:/Login";
+		}
+
+		int userId = loginUser.getUserId();
+
+		ArrayList<InventoryDetailDTO> allItems = inventoryDAO.selectDeletableList(userId);
+
+		int pageSize = 5;
+		List<InventoryDetailDTO> pageItems = PaginationHelper.getPage(allItems, page, pageSize);
+
+		model.addAttribute("items", pageItems);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("hasPrev", page > 0);
+		model.addAttribute("hasNext", (page + 1) * pageSize < allItems.size());
+
+		return "Inventory";
+	}
+
+	@PostMapping("/Inventory/Delete")
+	public String deleteInventory(@RequestParam(required = false) List<Integer> selectedIds,
+			HttpSession session) {
+
+		LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
+	    if (loginUser == null) {
+	        return "redirect:/Login";
+	    }
+
+	    int userId = loginUser.getUserId();
+
+	    if (selectedIds != null) {
+	        for (Integer id : selectedIds) {
+	            inventoryDAO.softDeleteDetailById(id, userId);
+	        }
+	    }
+		return "redirect:/Inventory";
+	}
+
 }

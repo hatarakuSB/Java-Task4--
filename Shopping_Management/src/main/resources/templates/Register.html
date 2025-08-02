@@ -21,7 +21,10 @@
 		日付<input type="datetime-local" th:field="*{BuyDate}" maxlength="10" /><br>
 		<div th:if="${#fields.hasErrors('BuyDate')}" th:errors="*{BuyDate}"></div>
 
-		<button type="submit">登録</button><button type="submit" formaction="/Menu">メニューに戻る</button>
+		<button type="submit">登録</button>
+	</form>
+	<form th:action="@{/Menu}" method="get">
+	    <button type="submit">メニューに戻る</button>
 	</form>
 </body>
 
