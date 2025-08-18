@@ -10,55 +10,46 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.Shopping_Management.Model.DAO.LoginDAO;
 import com.Shopping_Management.Model.DTO.LoginDTO;
+import com.Shopping_Management.Model.Service.LoginService;
 
+import config.AppConstants;
 import parts.LoginForm;
 
 @Controller
 public class LoginController {
 
-	private final LoginDAO loginDAO;
+	private final LoginService loginService;
 
-	public LoginController(LoginDAO loginDAO) {
-		this.loginDAO = loginDAO;
-	}
+    public LoginController(LoginService loginService) {
+        this.loginService = loginService;
+    }
 
 	// 初期表示
 	@GetMapping("/")
 	public String Login(Model model) {
-		model.addAttribute("loginForm", new LoginForm());
-		return "Login";
+	    model.addAttribute(AppConstants.ATTR_LOGIN_FORM, new LoginForm());
+	    return AppConstants.VIEW_LOGIN;
 	}
 
-	// 新規登録からログイン画面に戻る
-	@GetMapping("/Login")
-	public String showLoginPage(Model model) {
-		model.addAttribute("loginForm", new LoginForm());
-		return "Login";
-	}
-
-	// ログインボタン押下
-	@PostMapping("/Login")
-	public String login(@ModelAttribute("loginForm") @Valid LoginForm loginForm,
+	// ログイン処理
+	@PostMapping(AppConstants.LOGIN_URL)
+	public String login(@ModelAttribute(AppConstants.ATTR_LOGIN_FORM) @Valid LoginForm loginForm,
 	                    BindingResult bindingResult,
 	                    Model model,
 	                    HttpSession session) {
 	    if (bindingResult.hasErrors()) {
-	        return "Login";
+	        return AppConstants.VIEW_LOGIN;
 	    }
 
-	    LoginDTO loginUser = loginDAO.findByLoginForm(loginForm);
+	    LoginDTO loginUser = loginService.authenticate(loginForm);
 
-	    // 認証失敗 or 論理削除済み
-	    if (loginUser == null || loginUser.isDeleteFlag()) {
-	        model.addAttribute("loginError", "ユーザー名またはパスワードが違います");
-	        return "Login";
+	    if (loginUser == null) {
+	        model.addAttribute(AppConstants.ATTR_LOGIN_ERROR, AppConstants.MSG_LOGIN_FAILED);
+	        return AppConstants.VIEW_LOGIN;
 	    }
 
-	    // セッションにユーザー情報を保存
 	    session.setAttribute("loginUser", loginUser);
-
-	    return "redirect:/Menu";
+	    return AppConstants.REDIRECT_HOME; 
 	}
 }

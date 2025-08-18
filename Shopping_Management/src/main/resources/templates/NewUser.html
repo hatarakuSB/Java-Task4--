@@ -3,48 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <title>ユーザー登録</title>
+    <script src="/js/NewUser.js" defer></script>
+    <link rel="stylesheet" th:href="@{/css/NewUser.css}" type="text/css">
 </head>
 <body>
+    <div class="container">
+        <h2>ユーザー新規登録</h2>
 
-    <h2>ユーザー新規登録</h2>
+        <!-- 成功メッセージ -->
+        <div th:if="${successMessage != null}" class="success-box">
+            <p th:text="${successMessage}"></p>
+        </div>
 
-    <!-- 成功メッセージ表示 -->
-    <div th:if="${successMessage != null}">
-        <p th:text="${successMessage}"></p>
+        <!-- エラーメッセージ (サーバー or JS 共通) -->
+        <div id="errorBox" class="error-box" style="display:none;">
+            <span th:text="${errorMessage}"></span>
+        </div>
+
+        <!-- 入力フォーム -->
+        <form id="userForm" th:action="@{/NewUser}" th:object="${userForm}" method="post">
+            <div>
+                <label>ユーザー名：</label>
+                <input type="text" th:field="*{username}" maxlength="20" />
+            </div>
+
+            <div>
+                <label>パスワード：</label>
+                <input type="password" th:field="*{password}" maxlength="8" />
+            </div>
+
+            <div>
+                <label>確認用パスワード：</label>
+                <input type="password" th:field="*{confirmPassword}" maxlength="8" />
+            </div>
+
+            <div>
+                <button type="submit">登録</button>
+            </div>
+        </form>
+
+        <!-- 戻るリンク -->
+        <div>
+            <a th:href="@{/}" class="back-link">ログイン画面に戻る</a>
+        </div>
     </div>
-
-    <!-- エラーメッセージ表示 -->
-    <div th:if="${usernameError != null}">
-        <p th:text="${usernameError}"></p>
-    </div>
-
-    <form th:action="@{/NewUser}" th:object="${userForm}" method="post">
-        <div>
-            <label>ユーザー名：</label>
-            <input type="text" th:field="*{username}" maxlength="20" />
-            <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
-        </div>
-
-        <div>
-            <label>パスワード：</label>
-            <input type="password" th:field="*{password}" maxlength="6" />
-            <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
-        </div>
-
-        <div>
-            <label>確認用パスワード：</label>
-            <input type="password" th:field="*{confirmPassword}" maxlength="6" />
-            <span th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
-        </div>
-
-        <div>
-            <button type="submit">登録</button>
-        </div>
-    </form>
-
-    <div>
-        <a th:href="@{/Login}">ログイン画面に戻る</a>
-    </div>
-
 </body>
 </html>

@@ -40,8 +40,7 @@ public class HistoryDAO {
 	        INNER JOIN 
 	            PRODUCT_DETAIL d ON p.PRODUCT_ID = d.PRODUCT_ID
 	        WHERE 
-	            p.DELETE_FLAG = 0 AND d.DELETE_FLAG = 0
-	            AND p.USER_ID = ?
+	            p.USER_ID = ?
 	        ORDER BY 
 	            d.BUY_DATE DESC
 	        """;

@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.Shopping_Management.Model.DTO.LoginDTO;
 
 @Controller
-public class MenuController {
+public class HomeController {
 
-	@GetMapping("/Menu")
+	@GetMapping("/Home")
 	public String Menu(HttpSession session, Model model) {
 		// ログイン情報をセッションから取得
 		LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
@@ -22,6 +22,6 @@ public class MenuController {
 		}
 		model.addAttribute("authority", loginUser.isAuthority());
 
-		return "Menu";
+		return "Home";
 	}
 }

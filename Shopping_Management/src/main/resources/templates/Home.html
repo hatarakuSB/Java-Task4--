@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<link rel="stylesheet" th:href="@{css/Menu.css}" type="text/css">
+	<link rel="stylesheet" th:href="@{css/Home.css}" type="text/css">
 	<title>Menu</title>
 </head>
 
@@ -21,8 +21,10 @@
 				<button type="submit" formaction="/Register">登録</button>
 				<button type="submit" formaction="/History">履歴</button>
 				<button type="submit" formaction="/Inventory">在庫</button>
+				<button type="submit" formaction="/Menu">ユーザー情報</button>
+				<!-- 管理者のみ表示 -->
 				<div th:if="${authority}">
-					<button type="submit" formaction="/Menu">ユーザー情報</button>
+					<button type="submit" formaction="/Menu">ユーザー一覧</button>
 				</div>
 			</div>
 		</form>
