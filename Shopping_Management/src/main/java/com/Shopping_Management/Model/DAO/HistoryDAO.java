@@ -4,10 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
 import com.Shopping_Management.Model.DTO.HistoryDTO;
+
+import parts.HistoryForm;
 
 @Repository
 public class HistoryDAO {
@@ -21,115 +24,90 @@ public class HistoryDAO {
 			e.printStackTrace();
 		}
 	}
+	
+	//検索
+	public List<HistoryDTO> searchByConditions(HistoryForm form, int userId) {
+        List<HistoryDTO> list = new ArrayList<>();
 
-	// ユーザーIDで履歴を取得
-	public ArrayList<HistoryDTO> selectByUserId(int userId) {
-	    ArrayList<HistoryDTO> list = new ArrayList<>();
-	    PreparedStatement pstmt = null;
-	    ResultSet rs = null;
+        try {
+            connect();
 
-	    String sql = """
-	        SELECT 
-	            p.TRADE_ID,
-	            p.TRADE_NAME,
-	            d.PRICE,
-	            d.PLACE,
-	            d.BUY_DATE
-	        FROM 
-	            M_PRODUCT p
-	        INNER JOIN 
-	            PRODUCT_DETAIL d ON p.PRODUCT_ID = d.PRODUCT_ID
-	        WHERE 
-	            p.USER_ID = ?
-	        ORDER BY 
-	            d.BUY_DATE DESC
-	        """;
+            StringBuilder sql = new StringBuilder();
+            sql.append("SELECT ");
+            sql.append("    c.CATEGORY_NAME, ");
+            sql.append("    p.PRODUCT_NAME, ");
+            sql.append("    d.AMOUNT, ");
+            sql.append("    d.PLACE, ");
+            sql.append("    d.DATE ");
+            sql.append("FROM T_PRODUCT_DETAIL d ");
+            sql.append("JOIN M_PRODUCT p ON d.PRODUCT_ID = p.PRODUCT_ID ");
+            sql.append("JOIN M_CATEGORY c ON p.CATEGORY_ID = c.CATEGORY_ID ");
+            sql.append("WHERE d.USER_ID = ? ");
+            sql.append("  AND p.DELETE_FLAG = 0 ");
 
-	    try {
-	        connect();
-	        pstmt = con.prepareStatement(sql);
-	        pstmt.setInt(1, userId);
-	        rs = pstmt.executeQuery();
+            // 条件パラメータを動的に追加
+            ArrayList<Object> params = new ArrayList<>();
 
-	        while (rs.next()) {
-	            HistoryDTO dto = new HistoryDTO();
-	            dto.setTradeId(rs.getInt("TRADE_ID"));
-	            dto.setProductName(rs.getString("TRADE_NAME"));
-	            dto.setPrice(rs.getString("PRICE"));
-	            dto.setPlace(rs.getString("PLACE"));
-	            dto.setBuyDate(rs.getString("BUY_DATE"));
-	            list.add(dto);
-	        }
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    } finally {
-	        try {
-	            if (rs != null) rs.close();
-	            if (pstmt != null) pstmt.close();
-	            con.close();
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	    }
+            params.add(userId);
 
-	    return list;
-	}
+            if (form.getProductId() != null) {
+                sql.append(" AND p.PRODUCT_ID = ? ");
+                params.add(form.getProductId());
+            }
 
-	// 日付で履歴を絞り込む
-	public ArrayList<HistoryDTO> selectByDateAndUserId(String date, int userId) {
-	    ArrayList<HistoryDTO> list = new ArrayList<>();
-	    PreparedStatement pstmt = null;
-	    ResultSet rs = null;
+            if (form.getPlace() != null && !form.getPlace().isEmpty()) {
+                sql.append(" AND d.PLACE = ? ");
+                params.add(form.getPlace());
+            }
 
-	    String sql = """
-	        SELECT 
-	            p.TRADE_ID,
-	            p.TRADE_NAME,
-	            d.PRICE,
-	            d.PLACE,
-	            d.BUY_DATE
-	        FROM 
-	            M_PRODUCT p
-	        INNER JOIN 
-	            PRODUCT_DETAIL d ON p.PRODUCT_ID = d.PRODUCT_ID
-	        WHERE 
-	            DATE(d.BUY_DATE) = ?
-	            AND p.USER_ID = ?
-	            AND p.DELETE_FLAG = 0
-	            AND d.DELETE_FLAG = 0
-	        ORDER BY 
-	            d.BUY_DATE DESC
-	        """;
+            if (form.getMoneyFrom() != null) {
+                sql.append(" AND d.AMOUNT >= ? ");
+                params.add(form.getMoneyFrom());
+            }
 
-	    try {
-	        connect();
-	        pstmt = con.prepareStatement(sql);
-	        pstmt.setString(1, date);
-	        pstmt.setInt(2, userId);
-	        rs = pstmt.executeQuery();
+            if (form.getMoneyTo() != null) {
+                sql.append(" AND d.AMOUNT <= ? ");
+                params.add(form.getMoneyTo());
+            }
 
-	        while (rs.next()) {
-	            HistoryDTO dto = new HistoryDTO();
-	            dto.setTradeId(rs.getInt("TRADE_ID"));
-	            dto.setProductName(rs.getString("TRADE_NAME"));
-	            dto.setPrice(rs.getString("PRICE"));
-	            dto.setPlace(rs.getString("PLACE"));
-	            dto.setBuyDate(rs.getString("BUY_DATE"));
-	            list.add(dto);
-	        }
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    } finally {
-	        try {
-	            if (rs != null) rs.close();
-	            if (pstmt != null) pstmt.close();
-	            con.close();
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	    }
+            if (form.getDateFrom() != null && !form.getDateFrom().isEmpty()) {
+                sql.append(" AND d.DATE >= ? ");
+                params.add(form.getDateFrom() + " 00:00:00");
+            }
 
-	    return list;
-	}
+            if (form.getDateTo() != null && !form.getDateTo().isEmpty()) {
+                sql.append(" AND d.DATE <= ? ");
+                params.add(form.getDateTo() + " 23:59:59");
+            }
 
+            sql.append(" ORDER BY d.DATE DESC ");
+
+            PreparedStatement ps = con.prepareStatement(sql.toString());
+
+            // プレースホルダに値を順番に設定
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                HistoryDTO dto = new HistoryDTO();
+                dto.setCategoryName(rs.getString("CATEGORY_NAME"));
+                dto.setProductName(rs.getString("PRODUCT_NAME"));
+                dto.setAmount(rs.getInt("AMOUNT"));
+                dto.setPlace(rs.getString("PLACE"));
+                dto.setBuyDate(rs.getString("DATE"));
+                list.add(dto);
+            }
+
+            rs.close();
+            ps.close();
+            con.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
 }

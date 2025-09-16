@@ -5,10 +5,9 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
+  min-height: 100vh;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  flex-direction: column; /* ヘッダー＋コンテンツを縦並びにする */
 }
 
 .container {
@@ -17,6 +16,8 @@ body {
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   text-align: center;
+  width: fit-content;
+  margin: auto; /* ★ 中央配置はコンテナだけに適用 */
 }
 
 .fsize {
@@ -32,20 +33,22 @@ body {
   justify-items: center;
 }
 
-button {
+/* ボタンをリンクに置き換えた場合のスタイル */
+.button-link {
+  display: inline-block;
   background-color: #4CAF50;
   color: white;
-  border: none;
+  text-decoration: none;
+  text-align: center;
+  line-height: 60px; /* 高さを揃える */
   width: 150px;
   height: 60px;
   border-radius: 6px;
   font-size: 16px;
-  cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-button:hover {
+.button-link:hover {
   background-color: #45a049;
   transform: scale(1.05);
 }
-

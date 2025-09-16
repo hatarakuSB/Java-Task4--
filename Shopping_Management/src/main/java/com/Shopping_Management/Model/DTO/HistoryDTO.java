@@ -7,14 +7,16 @@ import lombok.Data;
 @Data
 @Component
 public class HistoryDTO {
-	
+	// 取引ID
 	private int tradeId;
-	
+	// カテゴリ名
+	private String categoryName;
+	// 商品名
 	private String productName;
-	
-	private String price;
-	
+	// 金額
+	private int amount;
+	// 場所
 	private String place;
-	
+	// 購入日
 	private String buyDate;
 }

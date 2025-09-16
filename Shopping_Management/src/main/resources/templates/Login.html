@@ -12,22 +12,18 @@
 	<div class="container">
 		<form id="loginForm" th:action="@{/Login}" th:object="${loginForm}" method="post">
 
-			<!-- ログインエラーメッセージ (サーバー側/JS両方共通で表示) -->
+			<!-- エラーメッセージ -->
 			<div id="error-message" class="error">
 				<p th:text="${loginError}"></p>
-				<!-- JS では <ul><li>…</li></ul> をここに挿入 -->
 			</div>
 
 			<!-- タイトル -->
 			<h2 class="fsize">ログイン画面</h2>
 
 			<input type="text" th:field="*{loUser}" placeholder="Username" maxlength="8" />
-			<div th:if="${#fields.hasErrors('loUser')}" th:errors="*{loUser}"></div>
 
 			<input type="password" th:field="*{loPass}" placeholder="Password" maxlength="8" />
-			<div th:if="${#fields.hasErrors('loPass')}" th:errors="*{loPass}"></div>
 
-			<!-- ボタン横並び -->
 			<div class="button-group">
 				<button type="submit">ログイン</button>
 				<button type="button" onclick="location.href='/NewUser'">新規登録</button>

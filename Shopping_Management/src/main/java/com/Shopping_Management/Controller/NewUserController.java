@@ -4,36 +4,32 @@ import jakarta.validation.Valid;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.Shopping_Management.Model.DTO.UserDTO;
-import com.Shopping_Management.Model.Service.UserService;
+import com.Shopping_Management.Model.Service.NewUserService;
+
+import parts.NewUserForm;
 
 @Controller
 public class NewUserController {
 
-    private final UserService userService;
+    private final NewUserService userService;
 
-    public NewUserController(UserService userService) {
+    public NewUserController(NewUserService userService) {
         this.userService = userService;
     }
 
     @GetMapping("/NewUser")
     public String showRegistrationForm(Model model) {
-        model.addAttribute("userForm", new UserDTO());
+        model.addAttribute("userForm", new NewUserForm());
         return "NewUser"; 
     }
 
     @PostMapping("/NewUser")
-    public String registerUser(@Valid @ModelAttribute("userForm") UserDTO userForm,
-                               BindingResult bindingResult,
+    public String registerUser(@Valid @ModelAttribute("userForm") NewUserForm userForm,
                                Model model) {
-        if (bindingResult.hasErrors()) {
-            return "NewUser";
-        }
 
         String errorMessage = userService.registerUser(userForm);
 
@@ -44,7 +40,7 @@ public class NewUserController {
 
         // 成功メッセージ
         model.addAttribute("successMessage", "登録が完了しました！");
-        model.addAttribute("userForm", new UserDTO()); 
+        model.addAttribute("userForm", new NewUserForm()); 
         return "NewUser";
     }
 }

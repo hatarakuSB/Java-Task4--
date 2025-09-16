@@ -8,14 +8,18 @@ import lombok.Data;
 @Component
 public class LoginDTO {
 
+	//ユーザーID
 	private int userId;
 
+	//ユーザ名
 	private String userName;
-	
-	private String password;
-	
-	private boolean authority;
-	
-	private boolean deleteFlag;
 
+	//パスワード
+	private String password;
+
+	//権限
+	private boolean authority;
+
+	//削除フラグ
+	private boolean deleteFlag;
 }

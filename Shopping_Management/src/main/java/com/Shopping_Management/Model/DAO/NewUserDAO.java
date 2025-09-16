@@ -6,10 +6,10 @@ import java.sql.ResultSet;
 
 import org.springframework.stereotype.Repository;
 
-import com.Shopping_Management.Model.DTO.UserDTO;
+import parts.NewUserForm;
 
 @Repository 
-public class UserDAO {
+public class NewUserDAO {
 	private Connection con = null;
 
 	public void connect() {
@@ -46,8 +46,8 @@ public class UserDAO {
 		return exists;
 	}
 
-	// 新規登録
-	public void insert(UserDTO user) {
+	// 新規ユーザー登録
+	public void newUserInsert(NewUserForm user) {
 		String sql = "INSERT INTO m_user(user_name, pass_word) VALUES (?, ?)";
 
 		try {

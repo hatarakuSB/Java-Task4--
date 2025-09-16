@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.Shopping_Management.Model.DAO.InventoryDAO;
-import com.Shopping_Management.Model.DTO.InventoryDetailDTO;
+import com.Shopping_Management.Model.DTO.InventoryDTO;
 import com.Shopping_Management.Model.DTO.LoginDTO;
 
-import parts.PaginationHelper;
+import config.AppConstants;
 
 @Controller
 public class InventoryController {
@@ -29,7 +29,6 @@ public class InventoryController {
 	// 在庫一覧画面の表示（集計済みデータ）
 	@GetMapping("/Inventory")
 	public String showInventory(
-			@RequestParam(defaultValue = "0") int page,
 			Model model,
 			HttpSession session) {
 
@@ -37,18 +36,16 @@ public class InventoryController {
 		if (loginUser == null) {
 			return "redirect:/Login";
 		}
+		model.addAttribute("loginUser", loginUser);
 
+		// ページ名
+		model.addAttribute("pageTitle", AppConstants.TITLE_INVENTORY);
+		
 		int userId = loginUser.getUserId();
 
-		ArrayList<InventoryDetailDTO> allItems = inventoryDAO.selectDeletableList(userId);
-
-		int pageSize = 5;
-		List<InventoryDetailDTO> pageItems = PaginationHelper.getPage(allItems, page, pageSize);
-
-		model.addAttribute("items", pageItems);
-		model.addAttribute("currentPage", page);
-		model.addAttribute("hasPrev", page > 0);
-		model.addAttribute("hasNext", (page + 1) * pageSize < allItems.size());
+		ArrayList<InventoryDTO> allItems = inventoryDAO.selectDeletableList(userId);
+		
+		model.addAttribute("items", allItems);
 
 		return "Inventory";
 	}

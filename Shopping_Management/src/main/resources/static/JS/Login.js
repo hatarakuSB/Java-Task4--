@@ -1,3 +1,4 @@
+//DOMContentLoadedでHTMLの読込後、処理を開始。
 document.addEventListener("DOMContentLoaded", function () {
 
     // form, input要素を取得

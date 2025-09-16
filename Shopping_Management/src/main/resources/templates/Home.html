@@ -1,34 +1,25 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
-	<meta charset="UTF-8">
-	<link rel="stylesheet" th:href="@{css/Home.css}" type="text/css">
-	<title>Menu</title>
+    <meta charset="UTF-8">
+    <title>ホーム</title>
+    <link rel="stylesheet" th:href="@{/css/header.css}" type="text/css">
 </head>
-
 <body>
-	<div class="container">
-		<form action="?" method="get">
-			<h2>
-				<p class="fsize">メニュー</p>
-			</h2>
-			<!-- 登録完了メッセージ表示 -->
-			    <div th:if="${successMessage}">
-			        <p th:text="${successMessage}"></p>
-			    </div>
-			<div class="button-grid">
-				<button type="submit" formaction="/Register">登録</button>
-				<button type="submit" formaction="/History">履歴</button>
-				<button type="submit" formaction="/Inventory">在庫</button>
-				<button type="submit" formaction="/Menu">ユーザー情報</button>
-				<!-- 管理者のみ表示 -->
-				<div th:if="${authority}">
-					<button type="submit" formaction="/Menu">ユーザー一覧</button>
-				</div>
-			</div>
-		</form>
-	</div>
-</body>
+    <!-- 共通ヘッダー -->
+    <div th:replace="common/header :: header"></div>
 
+    <main class="home-main">
+        <h2>ようこそ、買い物管理システムへ</h2>
+
+        <nav class="home-links">
+            <a th:href="@{/Register}">登録</a><br>
+            <a th:href="@{/History}">履歴</a><br>
+            <a th:href="@{/Inventory}">在庫</a><br>
+            <a th:href="@{/PasswordChange}">パスワード変更</a><br>
+            <a th:href="@{/Todo}">Todoアプリ</a><br>
+            <a th:if="${authority}" th:href="@{/UserList}">ユーザー一覧（※管理者のみ表示）</a>
+        </nav>
+    </main>
+</body>
 </html>
