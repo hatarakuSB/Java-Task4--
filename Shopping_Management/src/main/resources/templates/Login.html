@@ -11,6 +11,11 @@
 <body>
 	<div class="container">
 		<form id="loginForm" th:action="@{/Login}" th:object="${loginForm}" method="post">
+			
+			<!-- ログアウトメッセージ -->
+			<div id="logout-message" class="success" th:if="${logoutMessage != null}">
+			    <p th:text="${logoutMessage}"></p>
+			</div>
 
 			<!-- エラーメッセージ -->
 			<div id="error-message" class="error">
