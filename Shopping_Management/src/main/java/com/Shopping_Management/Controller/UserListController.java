@@ -4,20 +4,22 @@ import java.io.IOException;
 import java.util.List;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.Shopping_Management.Model.DTO.LoginDTO;
 import com.Shopping_Management.Model.DTO.UserListDTO;
 import com.Shopping_Management.Model.Service.UserListService;
 
+import config.AppConstants;
+
 @Controller
-@RequestMapping("/UserList")
 public class UserListController {
 
     private final UserListService userListService;
@@ -29,21 +31,29 @@ public class UserListController {
     /**
      * ユーザー一覧画面表示
      */
-    @GetMapping
-    public String showUserList(Model model) {
+    @GetMapping("/UserList")
+    public String showUserList(HttpSession session, Model model) {
+        // ログイン情報をセッションから取得
+        LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
+        model.addAttribute("loginUser", loginUser);
+
+        // ページ名の取得
+        model.addAttribute("pageTitle", AppConstants.TITLE_USER_LIST);
+
+        // ユーザー一覧を取得
         List<UserListDTO> users = userListService.findAllUsers();
         model.addAttribute("users", users);
+
         return "UserList";
     }
 
     /**
      * ユーザー削除処理
      */
-    @PostMapping("/Delete")
+    @PostMapping("/UserList/Delete")
     public String deleteUsers(@RequestParam(value = "deleteIds", required = false) List<Integer> deleteIds,
                               Model model) {
         if (deleteIds == null || deleteIds.isEmpty()) {
-            model.addAttribute("errorMessage", "削除するユーザーを選択してください。");
             model.addAttribute("users", userListService.findAllUsers());
             return "UserList";
         }
@@ -55,9 +65,8 @@ public class UserListController {
     /**
      * CSVインポート処理
      */
-    @PostMapping("/Import")
-    public String importCsv(@RequestParam("file") MultipartFile file,
-                            Model model) {
+    @PostMapping("/UserList/Import")
+    public String importCsv(@RequestParam("file") MultipartFile file, Model model) {
         try {
             if (file.isEmpty()) {
                 model.addAttribute("errorMessage", "CSVファイルを選択してください。");
@@ -76,8 +85,8 @@ public class UserListController {
     /**
      * CSVエクスポート処理
      */
-    @GetMapping("/Export")
+    @GetMapping("/UserList/Export")
     public void exportCsv(HttpServletResponse response) throws IOException {
-    	userListService.exportUsersToCsv(response);
+        userListService.exportUsersToCsv(response);
     }
 }

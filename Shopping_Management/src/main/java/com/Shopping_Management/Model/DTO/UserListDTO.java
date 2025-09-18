@@ -4,7 +4,13 @@ import lombok.Data;
 
 @Data
 public class UserListDTO {
-	private int userId;       // ユーザーID (PK)
-    private String userName;  // ユーザー名
-    private String password;  // パスワード
+	
+	//チェックボックス用 USER_ID
+	private int userId;
+	
+	// ユーザー名
+	private String userName;
+	
+	// パスワード
+	private String password;
 }

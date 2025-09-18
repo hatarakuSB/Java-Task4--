@@ -18,7 +18,8 @@
             <a th:href="@{/Inventory}">在庫</a><br>
             <a th:href="@{/PasswordChange}">パスワード変更</a><br>
             <a th:href="@{/Todo}">Todoアプリ</a><br>
-            <a th:if="${authority}" th:href="@{/UserList}">ユーザー一覧（※管理者のみ表示）</a>
+			<!-- 管理者のみ表示 -->
+            <a th:if="${authority}" th:href="@{/UserList}">ユーザー一覧</a>
         </nav>
     </main>
 </body>

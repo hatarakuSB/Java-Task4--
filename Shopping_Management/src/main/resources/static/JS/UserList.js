@@ -3,21 +3,25 @@ document.addEventListener("DOMContentLoaded", function () {
     const errorBox = document.getElementById("error-message");
 
     form.addEventListener("submit", function (e) {
-        const checked = form.querySelectorAll("input[name='deleteIds']:checked").length > 0;
+        const checkboxes = form.querySelectorAll("input[name='deleteIds']");
+        let checked = false;
+
+        checkboxes.forEach(cb => {
+            if (cb.checked) {
+                checked = true;
+            }
+        });
 
         if (!checked) {
-            e.preventDefault();
-            showError("削除するユーザーを選択してください。");
-            return;
-        }
+            e.preventDefault(); // フォーム送信を止める
+            errorBox.style.display = "block";
+            errorBox.textContent = "削除するユーザーを選択してください。";
+        } else {
+            errorBox.style.display = "none";
 
-        if (!confirm("選択されたユーザーを本当に削除しますか？")) {
-            e.preventDefault();
+            if (!confirm("選択されたユーザーを本当に削除しますか？")) {
+                e.preventDefault();
+            }
         }
     });
-
-    function showError(message) {
-        errorBox.textContent = message;
-        errorBox.style.display = "block";
-    }
 });

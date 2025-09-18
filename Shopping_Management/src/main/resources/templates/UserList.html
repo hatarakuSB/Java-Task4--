@@ -10,6 +10,12 @@
 <body>
 	<!-- 共通ヘッダー -->
 	<div th:replace="common/header :: header"></div>
+	
+	<!-- エラーメッセージエリア -->
+	<div id="error-message" class="error" style="display:none;"></div>
+	<div th:if="${errorMessage != null}" class="error">
+	    <p th:text="${errorMessage}"></p>
+	</div>
 
     <form th:action="@{/UserList/Delete}" method="post" id="frmUserList">
         <table id="tblUsers" border="1">
