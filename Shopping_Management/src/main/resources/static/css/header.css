@@ -75,7 +75,7 @@ body {
 }
 
 .divider {
-	border-bottom: 1px solid #000;  /* 黒い線だけ */
+	border-bottom: 1px solid white;  /* 黒い線だけ */
 	    background-color: #f57c00;      /* オレンジ背景維持 */
 	    height: 1px;                    /* 線の太さ調整可能 */
 	    margin: 0;

@@ -68,7 +68,7 @@ public class HistoryController {
 
 		// items は FlashAttribute でセットされるので特に初期化不要
 		if (!model.containsAttribute("items")) {
-			model.addAttribute("items", new ArrayList<HistoryDTO>()); // 初期表示は空
+			model.addAttribute("items", new ArrayList<HistoryDTO>()); 
 		}
 
 		return "History";
@@ -87,16 +87,22 @@ public class HistoryController {
 		}
 
 		// 相関チェック
-		String errorMessage = historyService.validateConditions(historyForm);
-		if (errorMessage != null) {
-			redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
-			redirectAttributes.addFlashAttribute("historyForm", historyForm);
-			return "redirect:/History";
+		List<String> errorMessages = historyService.validateConditions(historyForm);
+		if (!errorMessages.isEmpty()) {
+		    redirectAttributes.addFlashAttribute("errorMessages", errorMessages);
+		    redirectAttributes.addFlashAttribute("historyForm", historyForm);
+		    return "redirect:/History";
 		}
 
 		// 検索実行
 		List<HistoryDTO> results = historyService.search(historyForm, loginUser.getUserId());
 
+		// 結果チェック
+	    String noDataMessage = historyService.checkNoData(results);
+	    if (noDataMessage != null) {
+	    	redirectAttributes.addFlashAttribute("errorMessages", noDataMessage);
+	    }
+	    
 		// 検索条件と結果を FlashAttribute に保存
 		redirectAttributes.addFlashAttribute("historyForm", historyForm);
 		redirectAttributes.addFlashAttribute("items", results);

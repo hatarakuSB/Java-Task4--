@@ -16,13 +16,14 @@
 	<!-- 共通ヘッダー -->
 	<div th:replace="common/header :: header"></div>
 	
-	<div class="form-container">	
 		<!-- エラーメッセージ -->
 		<div id="errorBox" class="error" style="display:none;"></div>
-		<div th:if="${errorMessage != null}" class="error">
-		    <p th:text="${errorMessage}"></p>
+		<div th:if="${errorMessages != null}" class="error">
+		    <div th:each="msg : ${errorMessages}" th:text="${msg}"></div>
 		</div>
-
+		
+		<div class="form-container">
+			
 		<!-- カテゴリプルダウン -->
 		<form th:action="@{/History}" method="get" class="form-table">
 			<div class="form-row">
@@ -57,7 +58,6 @@
 		<!-- 検索フォーム -->
 		<form id="historyForm" th:action="@{/History}" th:object="${historyForm}" method="post" class="form-table">
 			
-			<!-- カテゴリ／商品は hidden で保持 -->
 			<input type="hidden" th:field="*{categoryId}" th:value="${selectedCategoryId}" />
 			<input type="hidden" th:field="*{productId}" th:value="${selectedProductId}" />
 
@@ -97,15 +97,25 @@
 		            <th>日付</th>
 		        </tr>
 		    </thead>
-		    <tbody>
-		        <tr th:each="item : ${items}">
-		            <td th:text="${item.categoryName}">カテゴリ</td>
-		            <td th:text="${item.productName}">商品名</td>
-		            <td th:text="${item.amount + '¥'}">金額</td>
-		            <td th:text="${item.place}">場所</td>
-		            <td th:text="${item.buyDate}">日付</td>
-		        </tr>
-		    </tbody>
+			<tbody>
+			    <!-- 実データの行 -->
+			    <tr th:each="item : ${items}">
+			        <td th:text="${item.categoryName}">カテゴリ</td>
+			        <td th:text="${item.productName}">商品名</td>
+			        <td th:text="${item.amount + '¥'}">金額</td>
+			        <td th:text="${item.place}">場所</td>
+			        <td th:text="${item.buyDate}">日付</td>
+			    </tr>
+
+			    <!-- 空白行で補完（items.size() が5未満なら追加表示） -->
+			    <tr th:each="i : ${#numbers.sequence(items.size() + 1, 5)}">
+			        <td>&nbsp;</td>
+			        <td></td>
+			        <td></td>
+			        <td></td>
+			        <td></td>
+			    </tr>
+			</tbody>
 		</table>
 	</div>
 </body>

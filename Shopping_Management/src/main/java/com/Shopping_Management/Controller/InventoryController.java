@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.Shopping_Management.Model.DAO.InventoryDAO;
 import com.Shopping_Management.Model.DTO.InventoryDTO;
@@ -52,7 +53,8 @@ public class InventoryController {
 
 	@PostMapping("/Inventory/Delete")
 	public String deleteInventory(@RequestParam(required = false) List<Integer> selectedIds,
-			HttpSession session) {
+			HttpSession session,
+			RedirectAttributes redirectAttributes) {
 
 		LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
 	    if (loginUser == null) {
@@ -64,6 +66,8 @@ public class InventoryController {
 	    if (selectedIds != null) {
 	        for (Integer id : selectedIds) {
 	            inventoryDAO.softDeleteDetailById(id, userId);
+	            // 成功メッセージを設定
+	            redirectAttributes.addFlashAttribute("successMessage", "在庫を削除しました。");
 	        }
 	    }
 		return "redirect:/Inventory";

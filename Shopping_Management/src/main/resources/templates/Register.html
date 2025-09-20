@@ -13,15 +13,15 @@
 	<!-- 共通ヘッダー -->
 	<div th:replace="common/header :: header"></div>
 	
-	<div class="form-container">	
-	<div id="error-message" class="error" style="display:none;"></div>
-	<div th:if="${errorMessage != null}" class="error">
-	    <p th:text="${errorMessage}"></p>
-	</div>
-	<div th:if="${successMessage != null}" class="success">
-	    <p th:text="${successMessage}"></p>
-	</div>
+	<span id="error-message" class="error" style="display:none;"></span>
 
+	<span th:if="${errorMessage != null}" class="error"
+	      th:text="${errorMessage}"></span>
+
+	<span th:if="${successMessage != null}" class="success"
+	      th:text="${successMessage}"></span>
+	
+	<div class="form-container">	
 		<!-- カテゴリプルダウン -->
 		<form th:action="@{/Register}" method="get" class="form-table">
 			<div class="form-row">

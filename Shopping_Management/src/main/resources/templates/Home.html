@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>ホーム</title>
     <link rel="stylesheet" th:href="@{/css/header.css}" type="text/css">
+	<link rel="stylesheet" th:href="@{/css/Home.css}" type="text/css">
 </head>
 <body>
     <!-- 共通ヘッダー -->
@@ -17,7 +18,7 @@
             <a th:href="@{/History}">履歴</a><br>
             <a th:href="@{/Inventory}">在庫</a><br>
             <a th:href="@{/PasswordChange}">パスワード変更</a><br>
-            <a th:href="@{/Todo}">Todoアプリ</a><br>
+			<a th:href="@{/Todo}"target="_blank">Todoアプリ</a><br>
 			<!-- 管理者のみ表示 -->
             <a th:if="${authority}" th:href="@{/UserList}">ユーザー一覧</a>
         </nav>
