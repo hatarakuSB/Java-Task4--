@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById("userForm");
-    const errorBox = document.getElementById("errorBox");
+    const messageBox = document.getElementById("messageBox");
 
     const username = document.querySelector("[name='username']");
     const password = document.querySelector("[name='password']");
@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
     form.addEventListener("submit", function(event) {
         let messages = [];
 
-        // ユーザー名
+        // ユーザー名チェック
         if (!username.value.trim()) {
             messages.push("ユーザー名は必須です");
         } else if (username.value.length > 20) {
@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function() {
             messages.push("ユーザー名は半角英数字のみ使用できます");
         }
 
-        // パスワード
+        // パスワードチェック
         if (!password.value.trim()) {
             messages.push("パスワードは必須です");
         } else if (password.value.length < 6 || password.value.length > 8) {
@@ -32,17 +32,15 @@ document.addEventListener("DOMContentLoaded", function() {
         // 確認用パスワード
         if (!confirmPassword.value.trim()) {
             messages.push("確認用パスワードは必須です");
-        } else if (password.value !== confirmPassword.value) {
-            messages.push("確認用パスワードが一致しません");
         }
 
-        // エラーがあれば表示して送信を止める
+        // JS 側のエラーがあれば上書きして送信を止める
         if (messages.length > 0) {
             event.preventDefault();
-            errorBox.style.display = "block";
-            errorBox.innerHTML = messages.join("<br>");
-        } else {
-            errorBox.style.display = "none";
+            messageBox.style.display = "block";
+            messageBox.className = "message-box error-box"; // ★ class をJSで上書き
+            messageBox.innerHTML = messages.join("<br>");
         }
+        // else の場合はサーバーへ送信 → Controller が message と class を上書きして返す
     });
 });

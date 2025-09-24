@@ -55,22 +55,23 @@ button {
 button:hover {
     background-color: #e66b00;
 }
-.error-area {
-    min-height: 60px;   /* フォームが押し下げられないよう領域確保 */
+
+/* ===== 共通メッセージエリア ===== */
+.message-box {
+    padding: 10px;
     margin: 10px 20px;
-    text-align: left;
+    border-radius: 5px;
+    font-weight: bold;
 }
 
-.error {
-    color: red;
-    font-weight: bold;
-    margin: 0;
-    display: inline-block !important;   /* 横幅をテキストのみに縮める */
+.error-box {
+    background-color: #ffe5e5;
+    color: #c00;
+    border: 1px solid #c00;
 }
 
-.success {
-    color: green;
-    font-weight: bold;
-    margin: 0;
-    display: inline-block !important;
+.success-box {
+    background-color: #e5ffe5;
+    color: #080;
+    border: 1px solid #080;
 }

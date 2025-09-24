@@ -13,13 +13,12 @@
 	<!-- 共通ヘッダー -->
 	<div th:replace="common/header :: header"></div>
 	
-	<span id="error-message" class="error" style="display:none;"></span>
-
-	<span th:if="${errorMessage != null}" class="error"
-	      th:text="${errorMessage}"></span>
-
-	<span th:if="${successMessage != null}" class="success"
-	      th:text="${successMessage}"></span>
+	<!-- サーバー・クライアント共通メッセージ枠 -->
+	<div id="messageBox"
+	     th:text="${message}"
+	     th:class="${messageClass}"
+	     th:attr="style=${message != null} ? '' : 'display:none;'">
+	</div>
 	
 	<div class="form-container">	
 		<!-- カテゴリプルダウン -->

@@ -24,7 +24,7 @@ public class PasswordChangeService {
 
         // 新旧同一チェック
         if (form.getCurrentPassword().equals(form.getNewPassword())) {
-            return "新しいパスワードは現在のものと異なる値を設定してください";
+            return "新しいパスワードは現在のものと異なるパスワードに設定してください";
         }
 
         // 確認用パスワード一致チェック
@@ -38,6 +38,6 @@ public class PasswordChangeService {
             return "パスワード変更に失敗しました。";
         }
 
-        return null; // 成功
+        return null; 
     }
 }

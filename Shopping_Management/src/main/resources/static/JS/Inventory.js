@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("inventoryForm");
-    const errorBox = document.getElementById("error-message");
+    const messageBox = document.getElementById("messageBox");
 
     form.addEventListener("submit", function (e) {
         const checkboxes = form.querySelectorAll("input[type='checkbox']");
@@ -14,10 +14,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (!checked) {
             e.preventDefault(); // フォーム送信を止める
-            errorBox.style.display = "block";
-            errorBox.textContent = "削除する商品を選択してください。";
-        } else {
-            errorBox.style.display = "none";
+            messageBox.style.display = "block";
+            messageBox.className = "message-box error-box"; // ★ error 表示
+            messageBox.textContent = "削除する商品を選択してください。";
         }
     });
 });

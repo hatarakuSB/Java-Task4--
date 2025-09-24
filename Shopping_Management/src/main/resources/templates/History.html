@@ -16,12 +16,13 @@
 	<!-- 共通ヘッダー -->
 	<div th:replace="common/header :: header"></div>
 	
-		<!-- エラーメッセージ -->
-		<div id="errorBox" class="error" style="display:none;"></div>
-		<div th:if="${errorMessages != null}" class="error">
-		    <div th:each="msg : ${errorMessages}" th:text="${msg}"></div>
-		</div>
-		
+	<!-- サーバー・クライアント共通メッセージ枠 -->
+	<div id="messageBox"
+	     th:utext="${message}"
+	     th:class="${messageClass}"
+	     th:attr="style=${message != null} ? '' : 'display:none;'">
+	</div>
+
 		<div class="form-container">
 			
 		<!-- カテゴリプルダウン -->

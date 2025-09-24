@@ -89,7 +89,8 @@ public class HistoryController {
 		// 相関チェック
 		List<String> errorMessages = historyService.validateConditions(historyForm);
 		if (!errorMessages.isEmpty()) {
-		    redirectAttributes.addFlashAttribute("errorMessages", errorMessages);
+	        redirectAttributes.addFlashAttribute("message", String.join("<br>", errorMessages));
+	        redirectAttributes.addFlashAttribute("messageClass", "message-box error-box");
 		    redirectAttributes.addFlashAttribute("historyForm", historyForm);
 		    return "redirect:/History";
 		}
@@ -100,8 +101,9 @@ public class HistoryController {
 		// 結果チェック
 	    String noDataMessage = historyService.checkNoData(results);
 	    if (noDataMessage != null) {
-	    	redirectAttributes.addFlashAttribute("errorMessages", noDataMessage);
-	    }
+	        redirectAttributes.addFlashAttribute("message", noDataMessage);
+	        redirectAttributes.addFlashAttribute("messageClass", "message-box error-box");
+	        }
 	    
 		// 検索条件と結果を FlashAttribute に保存
 		redirectAttributes.addFlashAttribute("historyForm", historyForm);

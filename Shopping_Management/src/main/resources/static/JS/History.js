@@ -1,29 +1,18 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // flatpickr 初期化
-    flatpickr("#dateFrom", {
-        dateFormat: "Y/m/d", 
-        allowInput: true 
-    });
+    flatpickr("#dateFrom", { dateFormat: "Y/m/d", allowInput: true });
+    flatpickr("#dateTo", { dateFormat: "Y/m/d", allowInput: true });
 
-    flatpickr("#dateTo", {
-        dateFormat: "Y/m/d",
-        allowInput: true
-    });
-
-    // フォームバリデーション
     const form = document.getElementById("historyForm");
-    const errorBox = document.getElementById("errorBox");
+    const messageBox = document.getElementById("messageBox");
 
     form.addEventListener("submit", function (e) {
         let errors = [];
 
-        // 商品名（hidden保持 → 未選択ならチェック）
         const productId = document.querySelector("input[name='productId']").value;
         if (!productId) {
             errors.push("商品名を選択してください");
         }
 
-        // 金額チェック
         const moneyFrom = document.querySelector("input[name='moneyFrom']").value.trim();
         const moneyTo = document.querySelector("input[name='moneyTo']").value.trim();
         const moneyPattern = /^[0-9]*$/;
@@ -44,7 +33,6 @@ document.addEventListener("DOMContentLoaded", function () {
             errors.push("金額（上限）は6桁以内で入力してください");
         }
 
-        // 日付チェック
         const dateFrom = document.querySelector("#dateFrom").value.trim();
         const dateTo = document.querySelector("#dateTo").value.trim();
         const datePattern = /^\d{4}\/\d{2}\/\d{2}$/; 
@@ -61,14 +49,11 @@ document.addEventListener("DOMContentLoaded", function () {
             errors.push("日付（終了日）は yyyy/MM/dd 形式で入力してください");
         }
 
-        
-        // エラーメッセージ表示
         if (errors.length > 0) {
             e.preventDefault();
-            errorBox.style.display = "block";
-            errorBox.innerHTML = errors.join("<br>");
-        } else {
-            errorBox.style.display = "none";
+            messageBox.style.display = "block";
+            messageBox.className = "message-box error-box";
+            messageBox.innerHTML = errors.join("<br>");
         }
     });
 });

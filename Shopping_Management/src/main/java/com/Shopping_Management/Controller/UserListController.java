@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.Shopping_Management.Model.DTO.LoginDTO;
 import com.Shopping_Management.Model.DTO.UserListDTO;
@@ -66,22 +67,24 @@ public class UserListController {
      * CSVインポート処理
      */
     @PostMapping("/UserList/Import")
-    public String importCsv(@RequestParam("file") MultipartFile file, Model model) {
+    public String importCsv(@RequestParam("file") MultipartFile file,
+                            RedirectAttributes redirectAttributes) {
         try {
             if (file.isEmpty()) {
-                model.addAttribute("errorMessage", "CSVファイルを選択してください。");
-                model.addAttribute("users", userListService.findAllUsers());
-                return "UserList";
+                redirectAttributes.addFlashAttribute("message", "ファイルを選択してください。");
+                redirectAttributes.addFlashAttribute("messageClass", "message-box error-box");
+                return "redirect:/UserList";
             }
+
             userListService.importUsersFromCsv(file);
+            redirectAttributes.addFlashAttribute("message", "CSVをインポートしました。");
+            redirectAttributes.addFlashAttribute("messageClass", "message-box success-box");
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "CSVインポートに失敗しました。");
-            model.addAttribute("users", userListService.findAllUsers());
-            return "UserList";
+            redirectAttributes.addFlashAttribute("message", "CSVインポートに失敗しました。");
+            redirectAttributes.addFlashAttribute("messageClass", "message-box error-box");
         }
         return "redirect:/UserList";
     }
-
     /**
      * CSVエクスポート処理
      */

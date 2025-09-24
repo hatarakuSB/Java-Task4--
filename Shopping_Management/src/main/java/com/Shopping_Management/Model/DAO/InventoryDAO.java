@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
@@ -83,8 +84,7 @@ public class InventoryDAO {
 	/**
 	 * 指定されたユーザーの、指定された商品詳細を論理削除
 	 */
-	public void softDeleteDetailById(int detailId, int userId) {
-		PreparedStatement pstmt = null;
+	public void softDeleteDetailById(List<Integer> selectedIds, int userId) {
 		String sql = """
 				    UPDATE T_PRODUCT_DETAIL
 				    SET DELETE_FLAG = 1
@@ -92,23 +92,23 @@ public class InventoryDAO {
 				      AND USER_ID = ?
 				""";
 
-		try {
-			connect();
-			pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, detailId);
-			pstmt.setInt(2, userId);
-			pstmt.executeUpdate();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (pstmt != null)
-					pstmt.close();
-				if (con != null)
-					con.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+		 try {
+		        connect();
+		        try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+		            for (Integer id : selectedIds) {
+		                pstmt.setInt(1, id);
+		                pstmt.setInt(2, userId);
+		                pstmt.executeUpdate();
+		            }
+		        }
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    } finally {
+		        try {
+		            if (con != null) con.close();
+		        } catch (Exception e) {
+		            e.printStackTrace();
+		        }
+		    }
+		 }
 }

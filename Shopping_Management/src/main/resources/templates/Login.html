@@ -12,14 +12,11 @@
 	<div class="container">
 		<form id="loginForm" th:action="@{/Login}" th:object="${loginForm}" method="post">
 			
-			<!-- ログアウトメッセージ -->
-			<div id="logout-message" class="success" th:if="${logoutMessage != null}">
-			    <p th:text="${logoutMessage}"></p>
-			</div>
-
-			<!-- エラーメッセージ -->
-			<div id="error-message" class="error">
-				<p th:text="${loginError}"></p>
+			<!-- サーバー・クライアント共通メッセージ枠 -->
+			<div id="messageBox"
+			     th:text="${message}"
+			     th:class="${messageClass}"
+			     th:attr="style=${message != null} ? '' : 'display:none;'">
 			</div>
 
 			<!-- タイトル -->

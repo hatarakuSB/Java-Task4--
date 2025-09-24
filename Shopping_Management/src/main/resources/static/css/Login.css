@@ -34,23 +34,6 @@ input[type="password"] {
   border-radius: 4px;
 }
 
-/* エラーメッセージ領域 */
-#error-message {
-  min-height: 40px;             
-  margin-bottom: 15px;
-  color: red;
-}
-
-/* 黒丸を消す（JSで生成するul/li用） */
-#error-message ul {
-  list-style-type: none;  
-  padding-left: 0;       
-  margin: 0;
-}
-#error-message li {
-  margin-bottom: 5px;
-}
-
 /* ボタン横並び */
 .button-group {
   display: flex;
@@ -75,3 +58,21 @@ input[type="password"] {
 table {
   white-space: nowrap;
 }
+
+.message-box {
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  font-weight: bold;
+}
+.error-box {
+  background-color: #ffe5e5;
+  color: #c00;
+  border: 1px solid #c00;
+}
+.logout-box {
+  background-color: #e5ffe5;
+  color: #c00;
+  border: 1px solid #c00;
+}
+

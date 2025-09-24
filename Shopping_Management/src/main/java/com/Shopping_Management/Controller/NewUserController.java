@@ -31,15 +31,16 @@ public class NewUserController {
     public String registerUser(@Valid @ModelAttribute("userForm") NewUserForm userForm,
                                Model model) {
 
-        String errorMessage = userService.registerUser(userForm);
+    	String errorMessage = userService.registerUser(userForm);
 
-        if (errorMessage != null) {
-            model.addAttribute("errorMessage", errorMessage);
-            return "NewUser";
-        }
-
-        // 成功メッセージ
-        model.addAttribute("successMessage", "登録が完了しました！");
+    	if (errorMessage != null) {
+    	    model.addAttribute("message", errorMessage);
+    	    model.addAttribute("messageClass", "message-box error-box");
+    	} else {
+    	    model.addAttribute("message", "登録が完了しました！");
+    	    model.addAttribute("messageClass", "message-box success-box");
+    	}
+    	
         model.addAttribute("userForm", new NewUserForm()); 
         return "NewUser";
     }

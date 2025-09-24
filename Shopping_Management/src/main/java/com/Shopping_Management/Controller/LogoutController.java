@@ -34,7 +34,8 @@ public class LogoutController {
         session.invalidate();
 
         // ログアウトメッセージをセット
-        redirectAttributes.addFlashAttribute("logoutMessage", "ログアウトされました");
+        redirectAttributes.addFlashAttribute("message", "ログアウトされました");
+        redirectAttributes.addFlashAttribute("messageClass", "message-box logout-box");
 
         // ログイン画面へリダイレクト
         return "redirect:" + AppConstants.LOGIN_URL;

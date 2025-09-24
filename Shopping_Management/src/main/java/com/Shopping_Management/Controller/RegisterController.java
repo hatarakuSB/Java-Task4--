@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.Shopping_Management.Model.DAO.PullDownDAO;
-import com.Shopping_Management.Model.DAO.RegisterDAO;
 import com.Shopping_Management.Model.DTO.CategoryDTO;
 import com.Shopping_Management.Model.DTO.LoginDTO;
 import com.Shopping_Management.Model.DTO.ProductDTO;
+import com.Shopping_Management.Model.Service.RegisterService;
 
 import config.AppConstants;
 import parts.RegisterForm;
@@ -28,11 +28,11 @@ public class RegisterController {
 	
 	private final PullDownDAO pullDownDAO;
 	
-	private final RegisterDAO registerDAO;
-	
-	public RegisterController(PullDownDAO pullDownDAO,RegisterDAO registerDAO) {
-		this.pullDownDAO = pullDownDAO;
-		this.registerDAO = registerDAO;
+	private final RegisterService registerService;
+
+	public RegisterController(PullDownDAO pullDownDAO, RegisterService registerService) {
+	    this.pullDownDAO = pullDownDAO;
+	    this.registerService = registerService;
 	}
 
 	@GetMapping("/Register")
@@ -89,12 +89,14 @@ public class RegisterController {
 
 	    int userId = loginUser.getUserId();
 
-	    boolean success = registerDAO.register(registerForm, userId);
+	    boolean errorMessage = registerService.register(registerForm, userId);
 
-	    if (success) {
-	        redirectAttributes.addFlashAttribute("successMessage", "登録が完了しました！");
+	    if (errorMessage) {
+	        redirectAttributes.addFlashAttribute("message", "登録が完了しました！");
+	        redirectAttributes.addFlashAttribute("messageClass", "message-box success-box");
 	    } else {
-	        redirectAttributes.addFlashAttribute("errorMessage", "登録処理でエラーが発生しました。");
+	        redirectAttributes.addFlashAttribute("message", "登録処理でエラーが発生しました。");
+	        redirectAttributes.addFlashAttribute("messageClass", "message-box error-box");
 	    }
 
 	    return "redirect:/Register";

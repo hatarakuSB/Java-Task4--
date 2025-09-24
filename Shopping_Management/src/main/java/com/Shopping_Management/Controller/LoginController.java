@@ -46,7 +46,8 @@ public class LoginController {
             // 失敗ログ（USER_IDは取得できない為、ユーザー名の入力値を保存）
             loginLogService.logFailure(loginForm.getLoUser());
 
-            model.addAttribute(AppConstants.ATTR_LOGIN_ERROR, AppConstants.MSG_LOGIN_FAILED);
+            model.addAttribute("message", AppConstants.MSG_LOGIN_FAILED);
+            model.addAttribute("messageClass", "message-box error-box");
             return AppConstants.VIEW_LOGIN;
         }
 

@@ -1,50 +1,39 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const form = document.getElementById("passwordForm");
-    const errorBox = document.getElementById("errorBox");
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("passwordChangeForm");
+    const messageBox = document.getElementById("messageBox");
 
-    const currentPassword = document.querySelector("[name='currentPassword']");
-    const newPassword = document.querySelector("[name='newPassword']");
-    const confirmPassword = document.querySelector("[name='confirmPassword']");
+    const currentPassword = document.querySelector("input[name='currentPassword']");
+    const newPassword = document.querySelector("input[name='newPassword']");
+    const confirmPassword = document.querySelector("input[name='confirmPassword']");
 
     const alnumRegex = /^[a-zA-Z0-9]+$/;
 
-    form.addEventListener("submit", function(event) {
-        let messages = [];
+    form.addEventListener("submit", function (e) {
+        let errors = [];
 
-        // 現在のパスワード
         if (!currentPassword.value.trim()) {
-            messages.push("現在のパスワードは必須です");
-        } else if (currentPassword.value.length !== 8) {
-            messages.push("現在のパスワードは8文字で入力してください");
-        } else if (!alnumRegex.test(currentPassword.value)) {
-            messages.push("現在のパスワードは半角英数字のみ使用できます");
+            errors.push("現在のパスワードを入力してください");
         }
 
-        // 新規のパスワード
         if (!newPassword.value.trim()) {
-            messages.push("新規のパスワードは必須です");
-        } else if (newPassword.value.length !== 8) {
-            messages.push("新規のパスワードは8文字で入力してください");
+            errors.push("新しいパスワードを入力してください");
+        } else if (newPassword.value.length < 6 || newPassword.value.length > 8) {
+            errors.push("新しいパスワードは6～8文字で入力してください");
         } else if (!alnumRegex.test(newPassword.value)) {
-            messages.push("新規のパスワードは半角英数字のみ使用できます");
+            errors.push("新しいパスワードは半角英数字のみ使用できます");
         }
 
-        // 確認用パスワード
         if (!confirmPassword.value.trim()) {
-            messages.push("確認用パスワードは必須です");
-        } else if (confirmPassword.value.length !== 8) {
-            messages.push("確認用パスワードは8文字で入力してください");
-        } else if (!alnumRegex.test(confirmPassword.value)) {
-            messages.push("確認用パスワードは半角英数字のみ使用できます");
+            errors.push("確認用パスワードを入力してください");
+        } else if (newPassword.value !== confirmPassword.value) {
+            errors.push("新しいパスワードと確認用パスワードが一致しません");
         }
 
-        // エラーがあれば表示して送信を止める
-        if (messages.length > 0) {
-            event.preventDefault();
-            errorBox.style.display = "block";
-            errorBox.innerHTML = messages.join("<br>");
-        } else {
-            errorBox.style.display = "none";
+        if (errors.length > 0) {
+            e.preventDefault();
+            messageBox.style.display = "block";
+            messageBox.className = "message-box error-box";
+            messageBox.innerHTML = errors.join("<br>");
         }
     });
 });

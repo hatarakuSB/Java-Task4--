@@ -8,43 +8,53 @@
     <script th:src="@{/js/UserList.js}" defer></script>
 </head>
 <body>
-	<!-- 共通ヘッダー -->
-	<div th:replace="common/header :: header"></div>
-	
-	<!-- エラーメッセージエリア -->
-	<div id="error-message" class="error" style="display:none;"></div>
-	<div th:if="${errorMessage != null}" class="error">
-	    <p th:text="${errorMessage}"></p>
-	</div>
+    <!-- 共通ヘッダー -->
+    <div th:replace="common/header :: header"></div>
 
-    <form th:action="@{/UserList/Delete}" method="post" id="frmUserList">
-        <table id="tblUsers" border="1">
-            <thead>
-                <tr>
-                    <th>削除</th>
-                    <th>ユーザー名</th>
-                    <th>パスワード</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="user : ${users}">
-                    <td><input type="checkbox" name="deleteIds" th:value="${user.userId}" /></td>
-                    <td th:text="${user.userName}"></td>
-                    <td th:text="${user.password}"></td>
-                </tr>
-            </tbody>
-        </table>
+    <!-- メッセージ枠 -->
+    <div id="messageBox"
+         th:text="${message}"
+         th:class="${messageClass}"
+         th:attr="style=${message != null} ? '' : 'display:none;'">
+    </div>
 
-        <button type="submit" id="btnDelete">削除</button>
-    </form>
+    <div class="container">
+        <!-- ユーザー一覧 -->
+		<div class="userlist-container">
+		    <!-- ユーザー一覧テーブル -->
+		    <form th:action="@{/UserList/Delete}" method="post" id="frmUserList">
+		        <table id="tblUsers" border="1">
+		            <thead>
+		                <tr>
+		                    <th>削除</th>
+		                    <th>ユーザー名</th>
+		                    <th>パスワード</th>
+		                </tr>
+		            </thead>
+		            <tbody>
+		                <tr th:each="user : ${users}">
+		                    <td><input type="checkbox" name="deleteIds" th:value="${user.userId}" /></td>
+		                    <td th:text="${user.userName}"></td>
+		                    <td th:text="${user.password}"></td>
+		                </tr>
+		            </tbody>
+		        </table>
+		        <div class="delete-btn-wrapper">
+		            <button type="submit" id="btnDelete">削除</button>
+		        </div>
+		    </form>
 
-    <form th:action="@{/UserList/Import}" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept=".csv" />
-        <button type="submit" id="btnCsvImport">CSVインポート</button>
-    </form>
+		    <!-- CSV操作ボタン -->
+		    <div class="csv-buttons">
+		        <form id="csvImportForm" th:action="@{/UserList/Import}" method="post" enctype="multipart/form-data">
+		            <input type="file" id="fileInput" name="file" accept=".csv" style="display:none" />
+		            <button type="button" id="btnCsvImport">CSVインポート</button>
+		        </form>
 
-    <form th:action="@{/UserList/Export}" method="get">
-        <button type="submit" id="btnCsvExport">CSVエクスポート</button>
-    </form>
+		        <form th:action="@{/UserList/Export}" method="get">
+		            <button type="submit" id="btnCsvExport">CSVエクスポート</button>
+		        </form>
+		    </div>
+		</div>
 </body>
 </html>

@@ -8,32 +8,30 @@
 </head>
 <body>
     <div class="container">
-        <h2>ユーザー新規登録</h2>
-
-        <!-- 成功メッセージ -->
-        <div th:if="${successMessage != null}" class="success-box">
-            <p th:text="${successMessage}"></p>
-        </div>
-
-        <!-- エラーメッセージ (サーバー or JS 共通) -->
-        <div id="errorBox" class="error-box" style="display:none;">
-            <span th:text="${errorMessage}"></span>
-        </div>
-
+        
+		<!-- サーバー・クライアント共通メッセージ枠 -->
+		<div id="messageBox"
+		     th:text="${message}"
+		     th:class="${messageClass}"
+		     th:attr="style=${message != null} ? '' : 'display:none;'">
+		</div>
+		
+		<h2>ユーザー新規登録</h2>
+		
         <!-- 入力フォーム -->
         <form id="userForm" th:action="@{/NewUser}" th:object="${userForm}" method="post">
             <div>
-                <label>ユーザー名：</label>
+                <label>ユーザー名</label>
                 <input type="text" th:field="*{username}" maxlength="20" />
             </div>
 
             <div>
-                <label>パスワード：</label>
+                <label>パスワード</label>
                 <input type="password" th:field="*{password}" maxlength="8" />
             </div>
 
             <div>
-                <label>確認用パスワード：</label>
+                <label>確認用パスワード</label>
                 <input type="password" th:field="*{confirmPassword}" maxlength="8" />
             </div>
 

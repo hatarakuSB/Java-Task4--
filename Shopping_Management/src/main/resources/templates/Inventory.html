@@ -11,15 +11,11 @@
     <!-- 共通ヘッダー -->
     <div th:replace="common/header :: header"></div>
 	
-	<!-- エラーメッセージ（JS・サーバー共通） -->
-	<div id="error-message" class="error" style="display:none;"></div>
-	<div th:if="${errorMessage != null}" class="error">
-	    <div th:text="${errorMessage}"></div>
-	</div>
-	
-	<!-- 成功メッセージ -->
-	<div th:if="${successMessage != null}" class="success">
-	    <div th:text="${successMessage}"></div>
+	<!-- サーバー・クライアント共通メッセージ枠 -->
+	<div id="messageBox"
+	     th:text="${message}"
+	     th:class="${messageClass}"
+	     th:attr="style=${message != null} ? '' : 'display:none;'">
 	</div>
 	
     <main class="inventory-main">
