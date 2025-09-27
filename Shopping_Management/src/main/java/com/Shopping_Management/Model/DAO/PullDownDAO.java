@@ -11,12 +11,17 @@ import org.springframework.stereotype.Repository;
 import com.Shopping_Management.Model.DTO.CategoryDTO;
 import com.Shopping_Management.Model.DTO.ProductDTO;
 
+/**
+ * プルダウンDAOクラス
+ */
 @Repository
 public class PullDownDAO {
 
 	private Connection con = null;
 
-	// DB接続
+	/**
+	 * DB接続
+	 */
 	public void connect() {
 		try {
 			con = Database.getConnect();
@@ -25,7 +30,11 @@ public class PullDownDAO {
 		}
 	}
 
-	// カテゴリ一覧
+	/**
+	 * カテゴリ一覧を取得
+	 *
+	 * @return List CategoryDTO カテゴリリスト
+	 */
 	public List<CategoryDTO> findAllCategories() {
 		List<CategoryDTO> list = new ArrayList<>();
 		try {
@@ -50,12 +59,18 @@ public class PullDownDAO {
 			try {
 				con.close();
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 		return list;
 	}
 
-	// 商品一覧
+	/**
+	 * 指定カテゴリの商品一覧を取得
+	 *
+	 * @param categoryId int
+	 * @return List ProductDTO 商品リスト
+	 */
 	public List<ProductDTO> findProductsByCategory(int categoryId) {
 		List<ProductDTO> list = new ArrayList<>();
 		try {
@@ -82,9 +97,9 @@ public class PullDownDAO {
 			try {
 				con.close();
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 		return list;
 	}
-
 }

@@ -9,32 +9,37 @@
 <body>
     <div class="container">
         
-		<!-- サーバー・クライアント共通メッセージ枠 -->
-		<div id="messageBox"
-		     th:text="${message}"
-		     th:class="${messageClass}"
-		     th:attr="style=${message != null} ? '' : 'display:none;'">
-		</div>
-		
-		<h2>ユーザー新規登録</h2>
-		
+        <!-- メッセージエリア（エラー・成功メッセージを表示） -->
+        <div id="messageBox"
+             th:text="${message}"
+             th:class="${messageClass}"
+             th:attr="style=${message != null} ? '' : 'display:none;'">
+        </div>
+        
+        <!-- 画面タイトル -->
+        <h2>ユーザー新規登録</h2>
+        
         <!-- 入力フォーム -->
         <form id="userForm" th:action="@{/NewUser}" th:object="${userForm}" method="post">
+            <!-- 入力欄：ユーザー名 -->
             <div>
                 <label>ユーザー名</label>
                 <input type="text" th:field="*{username}" maxlength="20" />
             </div>
 
+            <!-- 入力欄：パスワード -->
             <div>
                 <label>パスワード</label>
                 <input type="password" th:field="*{password}" maxlength="8" />
             </div>
 
+            <!-- 入力欄：確認用パスワード -->
             <div>
                 <label>確認用パスワード</label>
                 <input type="password" th:field="*{confirmPassword}" maxlength="8" />
             </div>
 
+            <!-- ボタンエリア -->
             <div>
                 <button type="submit">登録</button>
             </div>

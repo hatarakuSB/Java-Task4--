@@ -32,63 +32,58 @@ public class UserListController {
     /**
      * ユーザー一覧画面表示
      */
-    @GetMapping("/UserList")
+    @GetMapping(AppConstants.USER_LIST_URL)
     public String showUserList(HttpSession session, Model model) {
         // ログイン情報をセッションから取得
-        LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
+        LoginDTO loginUser = (LoginDTO) session.getAttribute(AppConstants.SESSION_LOGIN_USER);
         model.addAttribute("loginUser", loginUser);
 
         // ページ名の取得
-        model.addAttribute("pageTitle", AppConstants.TITLE_USER_LIST);
+        model.addAttribute(AppConstants.ATTR_PAGE_TITLE, AppConstants.TITLE_USER_LIST);
 
         // ユーザー一覧を取得
         List<UserListDTO> users = userListService.findAllUsers();
-        model.addAttribute("users", users);
+        model.addAttribute(AppConstants.ATTR_USERS, users);
 
-        return "UserList";
+        return AppConstants.VIEW_USER_LIST;
     }
 
     /**
      * ユーザー削除処理
      */
-    @PostMapping("/UserList/Delete")
-    public String deleteUsers(@RequestParam(value = "deleteIds", required = false) List<Integer> deleteIds,
+    @PostMapping(AppConstants.USER_LIST_DELETE_URL)
+    public String deleteUsers(@RequestParam(value = AppConstants.ATTR_DELETE_IDS, required = false) List<Integer> deleteIds,
                               Model model) {
         if (deleteIds == null || deleteIds.isEmpty()) {
-            model.addAttribute("users", userListService.findAllUsers());
-            return "UserList";
+            model.addAttribute(AppConstants.ATTR_USERS, userListService.findAllUsers());
+            return AppConstants.VIEW_USER_LIST;
         }
 
         userListService.deleteUsersWithDetails(deleteIds);
-        return "redirect:/UserList";
+        return AppConstants.REDIRECT_USER_LIST;
     }
 
     /**
      * CSVインポート処理
      */
-    @PostMapping("/UserList/Import")
-    public String importCsv(@RequestParam("file") MultipartFile file,
+    @PostMapping(AppConstants.USER_LIST_IMPORT_URL)
+    public String importCsv(@RequestParam(AppConstants.ATTR_FILE) MultipartFile file,
                             RedirectAttributes redirectAttributes) {
         try {
-            if (file.isEmpty()) {
-                redirectAttributes.addFlashAttribute("message", "ファイルを選択してください。");
-                redirectAttributes.addFlashAttribute("messageClass", "message-box error-box");
-                return "redirect:/UserList";
-            }
-
             userListService.importUsersFromCsv(file);
-            redirectAttributes.addFlashAttribute("message", "CSVをインポートしました。");
-            redirectAttributes.addFlashAttribute("messageClass", "message-box success-box");
+            redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE, AppConstants.MSG_CSV_IMPORT_SUCCESS);
+            redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE_CLASS, AppConstants.MESSAGE_BOX_SUCCESS);
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("message", "CSVインポートに失敗しました。");
-            redirectAttributes.addFlashAttribute("messageClass", "message-box error-box");
+            redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE, AppConstants.MSG_CSV_IMPORT_FAILED);
+            redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE_CLASS, AppConstants.MESSAGE_BOX_ERROR);
         }
-        return "redirect:/UserList";
+        return AppConstants.REDIRECT_USER_LIST;
     }
+    
     /**
      * CSVエクスポート処理
      */
-    @GetMapping("/UserList/Export")
+    @GetMapping(AppConstants.USER_LIST_EXPORT_URL)
     public void exportCsv(HttpServletResponse response) throws IOException {
         userListService.exportUsersToCsv(response);
     }

@@ -10,51 +10,51 @@
 <body>
     <!-- 共通ヘッダー -->
     <div th:replace="common/header :: header"></div>
-	
-	<!-- サーバー・クライアント共通メッセージ枠 -->
-	<div id="messageBox"
-	     th:text="${message}"
-	     th:class="${messageClass}"
-	     th:attr="style=${message != null} ? '' : 'display:none;'">
-	</div>
-	
+    
+    <!-- メッセージエリア（エラー・成功メッセージを表示） -->
+    <div id="messageBox"
+         th:text="${message}"
+         th:class="${messageClass}"
+         th:attr="style=${message != null} ? '' : 'display:none;'">
+    </div>
+    
     <main class="inventory-main">
-		<!-- 在庫リスト -->
-		<form id="inventoryForm" th:action="@{/Inventory/Delete}" method="post">
-		    <div class="result-container">
-		        <table class="inventory-table">
-		            <thead>
-		                <tr>
-		                    <th></th>
-		                    <th>カテゴリ</th>
-		                    <th>商品名</th>
-		                    <th>日付</th>
-		                </tr>
-		            </thead>
-		            <tbody>
-		                <!-- データ行 -->
-		                <tr th:each="item, stat : ${items}">
-		                    <td><input type="checkbox" name="selectedIds" th:value="${item.detailId}" /></td>
-		                    <td th:text="${item.categoryName}">カテゴリ</td>
-		                    <td th:text="${item.productName}">商品名</td>
-		                    <td th:text="${item.latestDate}">日付</td>
-		                </tr>
+        <!-- 在庫一覧フォーム -->
+        <form id="inventoryForm" th:action="@{/Inventory/Delete}" method="post">
+            <div class="result-container">
+                <table class="inventory-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>カテゴリ</th>
+                            <th>商品名</th>
+                            <th>日付</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item, stat : ${items}">
+                            <td><input type="checkbox" name="selectedIds" th:value="${item.detailId}" /></td>
+                            <td th:text="${item.categoryName}">カテゴリ</td>
+                            <td th:text="${item.productName}">商品名</td>
+                            <td th:text="${item.latestDate}">日付</td>
+                        </tr>
 
-		                <!-- 空白行補完（5行固定） -->
-		                <tr th:each="i : ${#numbers.sequence(items.size() + 1, 5)}">
-		                    <td></td>
-		                    <td></td>
-		                    <td></td>
-		                    <td></td>
-		                </tr>
-		            </tbody>
-		        </table>
-		    </div>
+                        <!-- データが5件未満の場合は空行で補完 -->
+                        <tr th:each="i : ${#numbers.sequence(items.size() + 1, 5)}">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-		    <div class="button-row">
-		        <button type="submit">削除</button>
-		    </div>
-		</form>
+            <!-- 削除ボタン -->
+            <div class="button-row">
+                <button type="submit">削除</button>
+            </div>
+        </form>
     </main>
 </body>
 </html>

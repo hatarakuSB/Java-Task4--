@@ -10,38 +10,61 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.Shopping_Management.Model.Service.NewUserService;
 
+import config.AppConstants;
 import parts.NewUserForm;
 
+/**
+ * 新規ユーザー登録コントローラークラス
+ */
 @Controller
 public class NewUserController {
 
-    private final NewUserService userService;
+	private final NewUserService userService;
 
-    public NewUserController(NewUserService userService) {
-        this.userService = userService;
-    }
+	public NewUserController(NewUserService userService) {
+		this.userService = userService;
+	}
 
-    @GetMapping("/NewUser")
-    public String showRegistrationForm(Model model) {
-        model.addAttribute("userForm", new NewUserForm());
-        return "NewUser"; 
-    }
+	/**
+	 * 新規ユーザー登録画面を表示
+	 *
+	 * @param model Model
+	 * @return String 遷移先ビュー名
+	 */
+	@GetMapping(AppConstants.NEW_USER_URL)
+	public String showRegistrationForm(Model model) {
+		// 空のフォームを画面に渡す
+		model.addAttribute(AppConstants.ATTR_NEW_USER_FORM, new NewUserForm());
 
-    @PostMapping("/NewUser")
-    public String registerUser(@Valid @ModelAttribute("userForm") NewUserForm userForm,
-                               Model model) {
+		return AppConstants.VIEW_NEW_USER;
+	}
 
-    	String errorMessage = userService.registerUser(userForm);
+	/**
+	 * 新規ユーザーを登録
+	 *
+	 * @param userForm NewUserForm
+	 * @param model Model
+	 * @return String 遷移先ビュー名
+	 */
+	@PostMapping(AppConstants.NEW_USER_URL)
+	public String registerUser(@Valid @ModelAttribute(AppConstants.ATTR_NEW_USER_FORM) NewUserForm userForm,
+			Model model) {
 
-    	if (errorMessage != null) {
-    	    model.addAttribute("message", errorMessage);
-    	    model.addAttribute("messageClass", "message-box error-box");
-    	} else {
-    	    model.addAttribute("message", "登録が完了しました！");
-    	    model.addAttribute("messageClass", "message-box success-box");
-    	}
-    	
-        model.addAttribute("userForm", new NewUserForm()); 
-        return "NewUser";
-    }
+		// サービスで登録処理を実行
+		String message = userService.registerUser(userForm);
+
+		// 成否に応じてメッセージを設定
+		if (message != null) {
+			model.addAttribute(AppConstants.ATTR_MESSAGE, message);
+			model.addAttribute(AppConstants.ATTR_MESSAGE_CLASS, AppConstants.MESSAGE_BOX_ERROR);
+		} else {
+			model.addAttribute(AppConstants.ATTR_MESSAGE, AppConstants.MSG_NEW_USER_SUCCESS);
+			model.addAttribute(AppConstants.ATTR_MESSAGE_CLASS, AppConstants.MESSAGE_BOX_SUCCESS);
+		}
+
+		// 再度空のフォームを渡し、入力欄を初期化
+		model.addAttribute(AppConstants.ATTR_NEW_USER_FORM, new NewUserForm());
+
+		return AppConstants.VIEW_NEW_USER;
+	}
 }

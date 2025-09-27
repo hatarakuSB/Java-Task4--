@@ -10,20 +10,35 @@ import com.Shopping_Management.Model.DTO.LoginDTO;
 
 import config.AppConstants;
 
+/**
+ * ホームコントローラークラス
+ */
 @Controller
 public class HomeController {
 
-	@GetMapping("/Home")
-	public String Home(HttpSession session,Model model) {
+	/**
+	 * ホーム画面を表示
+	 *
+	 * @param session HttpSession
+	 * @param model Model
+	 * @return String 遷移先ビュー名
+	 */
+	@GetMapping(AppConstants.HOME_URL)
+	public String Home(HttpSession session, Model model) {
 		// ログイン情報をセッションから取得
-		LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
-		//ユーザー名の取得
-		model.addAttribute("loginUser", loginUser); 
-		//ページ名の取得
-		model.addAttribute("pageTitle", AppConstants.TITLE_HOME);
-		//権限の取得
-		model.addAttribute("authority", loginUser.isAuthority());
-		
-		return "Home";
+		LoginDTO loginUser = (LoginDTO) session.getAttribute(AppConstants.SESSION_LOGIN_USER);
+		if (loginUser == null) {
+			return AppConstants.REDIRECT_LOGIN;
+		}
+		model.addAttribute(AppConstants.ATTR_LOGIN_USER, loginUser);
+
+		// ページタイトルを設定
+		model.addAttribute(AppConstants.ATTR_PAGE_TITLE, AppConstants.TITLE_HOME);
+
+		// 権限を設定
+		model.addAttribute(AppConstants.ATTR_AUTHORITY, loginUser.isAuthority());
+
+		// ホーム画面を表示
+		return AppConstants.VIEW_HOME;
 	}
 }

@@ -15,6 +15,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.Shopping_Management.Model.DAO.UserListDAO;
 import com.Shopping_Management.Model.DTO.UserListDTO;
 
+import config.AppConstants;
+
+/**
+ * ユーザー一覧サービスクラス
+ */
 @Service
 public class UserListService {
 
@@ -25,23 +30,30 @@ public class UserListService {
     }
 
     /**
-     * ユーザー一覧取得
+     * ユーザー一覧を取得
+     *
+     * @return List<UserListDTO> ユーザーリスト
      */
     public List<UserListDTO> findAllUsers() {
         return userListDAO.findAll();
     }
 
     /**
-     * 複数ユーザー削除（DAOでトランザクション実行）
+     * 複数ユーザーを削除
+     *
+     * @param userIds List<Integer> 削除対象のユーザーIDリスト
      */
     public void deleteUsersWithDetails(List<Integer> userIds) {
         for (Integer userId : userIds) {
-        	userListDAO.deleteUserWithDetails(userId);
+            userListDAO.deleteUserWithDetails(userId);
         }
     }
 
     /**
-     * CSVインポート
+     * CSVファイルからユーザーをインポート
+     *
+     * @param file MultipartFile アップロードされたCSVファイル
+     * @throws IOException 入出力例外
      */
     public void importUsersFromCsv(MultipartFile file) throws IOException {
         try (BufferedReader reader = new BufferedReader(
@@ -69,22 +81,21 @@ public class UserListService {
     }
 
     /**
-     * CSVエクスポート
+     * ユーザー一覧をCSVとしてエクスポート
+     *
+     * @param response HttpServletResponse CSV出力先レスポンス
+     * @throws IOException 入出力例外
      */
     public void exportUsersToCsv(HttpServletResponse response) throws IOException {
-        List<UserListDTO> users = findAllUsers(); // ユーザー一覧を取得
+        List<UserListDTO> users = findAllUsers();
 
-        // CSVダウンロード用のレスポンス設定
-        response.setContentType("text/csv; charset=UTF-8");
-        response.setHeader("Content-Disposition", "attachment; filename=\"user_list.csv\"");
+        response.setContentType(AppConstants.CSV_CONTENT_TYPE);
+        response.setHeader("Content-Disposition",
+                "attachment; filename=\"" + AppConstants.CSV_USER_LIST_FILENAME + "\"");
 
-        // 出力ストリーム取得
         PrintWriter writer = response.getWriter();
+        writer.println(AppConstants.CSV_USER_LIST_HEADER);
 
-        // ヘッダー行
-        writer.println("USER_ID,USER_NAME,PASSWORD");
-
-        // データ行
         for (UserListDTO user : users) {
             writer.printf("%d,%s,%s%n",
                     user.getUserId(),
@@ -94,5 +105,4 @@ public class UserListService {
 
         writer.flush();
     }
-
 }

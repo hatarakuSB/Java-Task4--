@@ -1,86 +1,85 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
-	<meta charset="UTF-8">
-	<link rel="stylesheet" th:href="@{/css/header.css}" type="text/css">
-	<link rel="stylesheet" th:href="@{/css/Register.css}" type="text/css">
-	<script src="/js/Register.js" defer></script>
-	<title>買い物登録</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/header.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/Register.css}" type="text/css">
+    <script src="/js/Register.js" defer></script>
+    <title>買い物登録</title>
 </head>
 
 <body>
-	<!-- 共通ヘッダー -->
-	<div th:replace="common/header :: header"></div>
-	
-	<!-- サーバー・クライアント共通メッセージ枠 -->
-	<div id="messageBox"
-	     th:text="${message}"
-	     th:class="${messageClass}"
-	     th:attr="style=${message != null} ? '' : 'display:none;'">
-	</div>
-	
-	<div class="form-container">	
-		<!-- カテゴリプルダウン -->
-		<form th:action="@{/Register}" method="get" class="form-table">
-			<div class="form-row">
-			    <label>カテゴリ</label>
-		    <select name="categoryId" onchange="this.form.submit()">
-		        <option value="">--選択してください--</option>
-		        <option th:each="cat : ${categoryList}"
-		                th:value="${cat.categoryId}"
-		                th:text="${cat.categoryName}"
-		                th:selected="${cat.categoryId == selectedCategoryId}">
-		        </option>
-		    </select>
-			</div>
-		</form>
-		
-			<!-- 商品名プルダウン -->
-			<form th:action="@{/Register}" method="get" class="form-table">
-				<div class="form-row">
-				    <label>商品名</label>
-			    <input type="hidden" name="categoryId" th:value="${selectedCategoryId}" />
-			    <select name="productId" onchange="this.form.submit()">
-			        <option value="">--選択してください--</option>
-			        <option th:each="prod : ${productList}"
-			                th:value="${prod.productId}"
-			                th:text="${prod.productName}"
-			                th:selected="${prod.productId == selectedProductId}">
-			        </option>
-			    </select>
-				</div>
-			</form>
-		
-		<!-- 登録フォーム -->
-		<form id="registerForm" th:action="@{/Register}" th:object="${registerForm}" method="post" class="form-table">
+    <!-- 共通ヘッダー -->
+    <div th:replace="common/header :: header"></div>
+    
+    <!-- メッセージエリア（エラー・成功メッセージを表示） -->
+    <div id="messageBox"
+         th:text="${message}"
+         th:class="${messageClass}"
+         th:attr="style=${message != null} ? '' : 'display:none;'">
+    </div>
+    
+    <div class="form-container">    
+        <!-- カテゴリ選択プルダウン -->
+        <form th:action="@{/Register}" method="get" class="form-table">
+            <div class="form-row">
+                <label>カテゴリ</label>
+                <select name="categoryId" onchange="this.form.submit()">
+                    <option value="">--選択してください--</option>
+                    <option th:each="cat : ${categoryList}"
+                            th:value="${cat.categoryId}"
+                            th:text="${cat.categoryName}"
+                            th:selected="${cat.categoryId == selectedCategoryId}">
+                    </option>
+                </select>
+            </div>
+        </form>
+        
+        <!-- 商品名選択プルダウン -->
+        <form th:action="@{/Register}" method="get" class="form-table">
+            <div class="form-row">
+                <label>商品名</label>
+                <input type="hidden" name="categoryId" th:value="${selectedCategoryId}" />
+                <select name="productId" onchange="this.form.submit()">
+                    <option value="">--選択してください--</option>
+                    <option th:each="prod : ${productList}"
+                            th:value="${prod.productId}"
+                            th:text="${prod.productName}"
+                            th:selected="${prod.productId == selectedProductId}">
+                    </option>
+                </select>
+            </div>
+        </form>
+        
+        <!-- 登録フォーム -->
+        <form id="registerForm" th:action="@{/Register}" th:object="${registerForm}" method="post" class="form-table">
+            <!-- カテゴリID・商品IDは hidden で保持 -->
+            <input type="hidden" th:field="*{categoryId}" th:value="${selectedCategoryId}" />
+            <input type="hidden" th:field="*{productId}" th:value="${selectedProductId}" />
+            
+            <!-- 入力欄：金額 -->
+            <div class="form-row">
+                <label>金額</label>
+                <input type="text" th:field="*{amount}" maxlength="10" />
+            </div>
 
-			<!-- カテゴリ名 -->
-		    <input type="hidden" th:field="*{categoryId}" th:value="${selectedCategoryId}" />
-			
-			<!-- 商品名 -->
-		    <input type="hidden" th:field="*{productId}" th:value="${selectedProductId}" />
-			
-			<div class="form-row">
-			    <label>金額</label>
-			    <input type="text" th:field="*{amount}" maxlength="10" />
-			</div>
+            <!-- 入力欄：場所 -->
+            <div class="form-row">
+                <label>場所</label>
+                <input type="text" th:field="*{place}" maxlength="20" />
+            </div>
 
-			<div class="form-row">
-			    <label>場所</label>
-			    <input type="text" th:field="*{place}" maxlength="20" />
-			</div>
-
-			<div class="form-row">
-			    <label>日付</label>
-			    <input type="datetime-local" th:field="*{buyDate}" />
-			</div>
-			
-		  <div class="form-row button-row">
-		    <button type="submit">登録</button>
-		  </div>
-		</form>
-		</div>
+            <!-- 入力欄：日付 -->
+            <div class="form-row">
+                <label>日付</label>
+                <input type="datetime-local" th:field="*{buyDate}" />
+            </div>
+            
+            <!-- ボタンエリア -->
+            <div class="form-row button-row">
+                <button type="submit">登録</button>
+            </div>
+        </form>
+    </div>
 </body>
-
 </html>

@@ -11,68 +11,75 @@ import org.springframework.stereotype.Service;
 import com.Shopping_Management.Model.DAO.HistoryDAO;
 import com.Shopping_Management.Model.DTO.HistoryDTO;
 
+import config.AppConstants;
 import parts.HistoryForm;
+
+/**
+ * 履歴検索サービスクラス
+ */
 @Service
 public class HistoryService {
-	private final HistoryDAO historyDAO;
+    private final HistoryDAO historyDAO;
 
-	public HistoryService(HistoryDAO historyDAO) {
-		this.historyDAO = historyDAO;
-	}
+    public HistoryService(HistoryDAO historyDAO) {
+        this.historyDAO = historyDAO;
+    }
 
-	/**
-	 * 履歴検索処理
-	 * @param form 検索条件
-	 * @param userId ログインユーザーID
-	 * @return エラーメッセージ（成功時は null）
-	 */
-	public List<String> validateConditions(HistoryForm form) {
-	    List<String> errors = new ArrayList<>();
+    /**
+     * 入力条件を検証
+     *
+     * @param form HistoryForm
+     * @return List String エラーメッセージ一覧（正常時は空リスト）
+     */
+    public List<String> validateConditions(HistoryForm form) {
+        List<String> errors = new ArrayList<>();
 
-	    // 金額相関チェック
-	    if (form.getMoneyFrom() != null && form.getMoneyTo() != null) {
-	        if (form.getMoneyFrom() > form.getMoneyTo()) {
-	            errors.add("金額（下限）は金額（上限）以下を入力してください。");
-	        }
-	    }
+        // 金額の相関チェック
+        if (form.getMoneyFrom() != null && form.getMoneyTo() != null) {
+            if (form.getMoneyFrom() > form.getMoneyTo()) {
+                errors.add(AppConstants.MSG_HISTORY_INVALID_MONEY_RANGE);
+            }
+        }
 
-	    // 日付相関チェック
-	    if (form.getDateFrom() != null && !form.getDateFrom().isEmpty()
-	            && form.getDateTo() != null && !form.getDateTo().isEmpty()) {
-	        try {
-	            LocalDate from = LocalDate.parse(form.getDateFrom(),
-	                    DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-	            LocalDate to = LocalDate.parse(form.getDateTo(),
-	                    DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-	            if (from.isAfter(to)) {
-	                errors.add("日付（開始日）は日付（終了日）以前を入力してください。");
-	            }
-	        } catch (DateTimeParseException e) {
-	            errors.add("日付の形式が不正です。（yyyy/MM/dd 形式で入力してください）");
-	        }
-	    }
+        // 日付の相関チェック
+        if (form.getDateFrom() != null && !form.getDateFrom().isEmpty()
+                && form.getDateTo() != null && !form.getDateTo().isEmpty()) {
+            try {
+                LocalDate from = LocalDate.parse(form.getDateFrom(),
+                        DateTimeFormatter.ofPattern(AppConstants.DATE_FORMAT));
+                LocalDate to = LocalDate.parse(form.getDateTo(),
+                        DateTimeFormatter.ofPattern(AppConstants.DATE_FORMAT));
+                if (from.isAfter(to)) {
+                    errors.add(AppConstants.MSG_HISTORY_INVALID_DATE_RANGE);
+                }
+            } catch (DateTimeParseException e) {
+                errors.add(AppConstants.MSG_HISTORY_INVALID_DATE_FORMAT);
+            }
+        }
 
-	    return errors;
-	}
+        return errors;
+    }
 
-	/**
-	 * 検索実行
-	 * @param form 検索条件
-	 * @param userId ユーザーID
-	 * @return 履歴リスト
-	 */
-	public List<HistoryDTO> search(HistoryForm form, int userId) {
-		return historyDAO.searchByConditions(form, userId);
-	}
-	
-	 /**
-     * 検索結果が空の場合のメッセージ判定
-     * @param results 検索結果リスト
-     * @return エラーメッセージ（データなしならメッセージ、ありなら null）
+    /**
+     * 条件を指定して履歴を検索
+     *
+     * @param form HistoryForm
+     * @param userId int
+     * @return List HistoryDTO
+     */
+    public List<HistoryDTO> search(HistoryForm form, int userId) {
+        return historyDAO.searchByConditions(form, userId);
+    }
+
+    /**
+     * 検索結果が空のメッセージ判定
+     *
+     * @param results List HistoryDTO
+     * @return String データなしの場合はメッセージ、ありの場合は null
      */
     public String checkNoData(List<HistoryDTO> results) {
         if (results == null || results.isEmpty()) {
-            return "該当するデータはありません。";
+            return AppConstants.MSG_NO_DATA;
         }
         return null;
     }

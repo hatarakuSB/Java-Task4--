@@ -23,11 +23,13 @@ import com.Shopping_Management.Model.Service.RegisterService;
 import config.AppConstants;
 import parts.RegisterForm;
 
+/**
+ * 登録コントローラークラス
+ */
 @Controller
 public class RegisterController {
 	
 	private final PullDownDAO pullDownDAO;
-	
 	private final RegisterService registerService;
 
 	public RegisterController(PullDownDAO pullDownDAO, RegisterService registerService) {
@@ -35,70 +37,92 @@ public class RegisterController {
 	    this.registerService = registerService;
 	}
 
-	@GetMapping("/Register")
+	/**
+	 * 登録画面を表示
+	 *
+	 * @param categoryId Integer
+	 * @param productId Integer
+	 * @param session HttpSession
+	 * @param model Model
+	 * @return String 遷移先ビュー名
+	 */
+	@GetMapping(AppConstants.REGISTER_URL)
 	public String showRegisterForm(
-	        @RequestParam(value = "categoryId", required = false) Integer categoryId,
-	        @RequestParam(value = "productId", required = false) Integer productId,
+	        @RequestParam(value = AppConstants.PARAM_CATEGORY_ID, required = false) Integer categoryId,
+	        @RequestParam(value = AppConstants.PARAM_PRODUCT_ID, required = false) Integer productId,
 	        HttpSession session,
 	        Model model) {
 
 	    // ログイン情報をセッションから取得
-	    LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
+	    LoginDTO loginUser = (LoginDTO) session.getAttribute(AppConstants.SESSION_LOGIN_USER);
+	    if (loginUser == null) {
+	        return AppConstants.REDIRECT_LOGIN;
+	    }
 	    model.addAttribute("loginUser", loginUser); 
 	    
-		//ページ名の取得
-		model.addAttribute("pageTitle", AppConstants.TITLE_REGISTER);
+		// ページ名
+	    model.addAttribute(AppConstants.ATTR_PAGE_TITLE, AppConstants.TITLE_REGISTER);
 
 	    // カテゴリ一覧を取得
 	    List<CategoryDTO> categoryList = pullDownDAO.findAllCategories();
-	    model.addAttribute("categoryList", categoryList);
+	    model.addAttribute(AppConstants.ATTR_CATEGORY_LIST, categoryList);
 
-	    // 商品一覧をカテゴリ選択時のみ取得
+	    // 商品一覧（カテゴリ選択時のみ）
 	    List<ProductDTO> productList = new ArrayList<>();
 	    if (categoryId != null) {
 	        productList = pullDownDAO.findProductsByCategory(categoryId);
-	        model.addAttribute("selectedCategoryId", categoryId);
+	        model.addAttribute(AppConstants.ATTR_SELECTED_CATEGORY_ID, categoryId);
 	    }
-	    model.addAttribute("productList", productList);
+	    model.addAttribute(AppConstants.ATTR_PRODUCT_LIST, productList);
 	    
 	    // RegisterForm を組み立て（カテゴリ・商品を保持して次のPOSTで利用）
 	    RegisterForm form = new RegisterForm();
 	    form.setCategoryId(categoryId);
 	    form.setProductId(productId);
-	    model.addAttribute("registerForm", form);
+	    model.addAttribute(AppConstants.ATTR_REGISTER_FORM, form);
 	    
 	    if (productId != null) {
-	        model.addAttribute("selectedProductId", productId);
+	    	model.addAttribute(AppConstants.ATTR_SELECTED_PRODUCT_ID, productId);	    
 	    }
 	    
-	    return "Register";
+	    return AppConstants.VIEW_REGISTER;
 	}
 
-
-	@PostMapping("/Register")
+	/**
+	 * 登録処理を実行
+	 *
+	 * @param registerForm RegisterForm
+	 * @param model Model
+	 * @param redirectAttributes RedirectAttributes
+	 * @param session HttpSession
+	 * @return String 遷移先ビュー名
+	 */
+	@PostMapping(AppConstants.REGISTER_URL)
 	public String submitRegisterForm(
-	        @ModelAttribute("registerForm") @Valid RegisterForm registerForm,
+	        @ModelAttribute(AppConstants.ATTR_REGISTER_FORM) @Valid RegisterForm registerForm,
 	        Model model,
 	        RedirectAttributes redirectAttributes,
 	        HttpSession session) {
-
-	    LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
+		
+		// ログイン情報をセッションから取得
+	    LoginDTO loginUser = (LoginDTO) session.getAttribute(AppConstants.SESSION_LOGIN_USER);
 	    if (loginUser == null) {
-	        return "redirect:/Login";
+	        return AppConstants.REDIRECT_LOGIN;
 	    }
-
+	    
+	    // 登録処理実行
 	    int userId = loginUser.getUserId();
+	    boolean message = registerService.register(registerForm, userId);
 
-	    boolean errorMessage = registerService.register(registerForm, userId);
-
-	    if (errorMessage) {
-	        redirectAttributes.addFlashAttribute("message", "登録が完了しました！");
-	        redirectAttributes.addFlashAttribute("messageClass", "message-box success-box");
+	    // 結果メッセージを設定
+	    if (message) {
+	        redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE, AppConstants.MSG_REGISTER_SUCCESS);
+	        redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE_CLASS, AppConstants.MESSAGE_BOX_SUCCESS);
 	    } else {
-	        redirectAttributes.addFlashAttribute("message", "登録処理でエラーが発生しました。");
-	        redirectAttributes.addFlashAttribute("messageClass", "message-box error-box");
+	        redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE, AppConstants.MSG_REGISTER_FAILED);
+	        redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE_CLASS, AppConstants.MESSAGE_BOX_ERROR);
 	    }
 
-	    return "redirect:/Register";
+	    return AppConstants.REDIRECT_REGISTER;
 	}
 }

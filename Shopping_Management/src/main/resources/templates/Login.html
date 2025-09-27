@@ -10,22 +10,26 @@
 
 <body>
 	<div class="container">
+		<!-- ログインフォーム -->
 		<form id="loginForm" th:action="@{/Login}" th:object="${loginForm}" method="post">
 			
-			<!-- サーバー・クライアント共通メッセージ枠 -->
+			<!-- メッセージエリア（エラー・成功メッセージを表示） -->
 			<div id="messageBox"
 			     th:text="${message}"
 			     th:class="${messageClass}"
 			     th:attr="style=${message != null} ? '' : 'display:none;'">
 			</div>
 
-			<!-- タイトル -->
+			<!-- 画面タイトル -->
 			<h2 class="fsize">ログイン画面</h2>
 
+			<!-- 入力欄：ユーザー名 -->
 			<input type="text" th:field="*{loUser}" placeholder="Username" maxlength="8" />
 
+			<!-- 入力欄：パスワード -->
 			<input type="password" th:field="*{loPass}" placeholder="Password" maxlength="8" />
 
+			<!-- ボタンエリア -->
 			<div class="button-group">
 				<button type="submit">ログイン</button>
 				<button type="button" onclick="location.href='/NewUser'">新規登録</button>

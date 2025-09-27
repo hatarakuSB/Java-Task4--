@@ -12,26 +12,39 @@ import com.Shopping_Management.Model.DTO.HistoryDTO;
 
 import parts.HistoryForm;
 
+/**
+ * 履歴DAOクラス
+ */
 @Repository
 public class HistoryDAO {
 
-	private Connection con = null;
+    private Connection con = null;
 
-	public void connect() {
-		try {
-			con = Database.getConnect();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	//検索
-	public List<HistoryDTO> searchByConditions(HistoryForm form, int userId) {
+    /**
+     * DB接続
+     */
+    public void connect() {
+        try {
+            con = Database.getConnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 検索条件を指定して履歴を取得
+     *
+     * @param form HistoryForm
+     * @param userId int
+     * @return List HistoryDTO
+     */
+    public List<HistoryDTO> searchByConditions(HistoryForm form, int userId) {
         List<HistoryDTO> list = new ArrayList<>();
 
         try {
             connect();
 
+            // SQLを組み立て
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT ");
             sql.append("    c.CATEGORY_NAME, ");
@@ -47,7 +60,6 @@ public class HistoryDAO {
 
             // 条件パラメータを動的に追加
             ArrayList<Object> params = new ArrayList<>();
-
             params.add(userId);
 
             if (form.getProductId() != null) {
@@ -89,6 +101,7 @@ public class HistoryDAO {
                 ps.setObject(i + 1, params.get(i));
             }
 
+            // 検索実行
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 HistoryDTO dto = new HistoryDTO();

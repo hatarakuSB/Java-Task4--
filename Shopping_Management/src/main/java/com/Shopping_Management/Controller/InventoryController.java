@@ -17,6 +17,9 @@ import com.Shopping_Management.Model.Service.InventoryService;
 
 import config.AppConstants;
 
+/**
+ * 在庫コントローラークラス
+ */
 @Controller
 public class InventoryController {
 
@@ -26,48 +29,64 @@ public class InventoryController {
 		this.inventoryService = inventoryService;
 	}
 
-	// 在庫一覧画面の表示（集計済みデータ）
-	@GetMapping("/Inventory")
-	public String showInventory(
-			Model model,
-			HttpSession session) {
+	/**
+	 * 在庫一覧画面を表示
+	 * 
+	 * @param model Model
+	 * @param session HttpSession
+	 * @return String 遷移先ビュー名
+	 */
+	@GetMapping(AppConstants.INVENTORY_URL)
+	public String showInventory(Model model, HttpSession session) {
 
-		LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
+		// ログイン情報をセッションから取得
+		LoginDTO loginUser = (LoginDTO) session.getAttribute(AppConstants.SESSION_LOGIN_USER);
 		if (loginUser == null) {
-			return "redirect:/Login";
+			return AppConstants.REDIRECT_LOGIN;
 		}
-		model.addAttribute("loginUser", loginUser);
+		model.addAttribute(AppConstants.ATTR_LOGIN_USER, loginUser);
 
 		// ページ名
-		model.addAttribute("pageTitle", AppConstants.TITLE_INVENTORY);
-		
-	    List<InventoryDTO> inventoryList = inventoryService.getInventoryList(loginUser.getUserId());
-	    model.addAttribute("items", inventoryList);
+		model.addAttribute(AppConstants.ATTR_PAGE_TITLE, AppConstants.TITLE_INVENTORY);
 
-		return "Inventory";
+		// 在庫一覧を取得し、画面に渡す
+		List<InventoryDTO> inventoryList = inventoryService.getInventoryList(loginUser.getUserId());
+		model.addAttribute(AppConstants.ATTR_ITEMS, inventoryList);
+
+		return AppConstants.VIEW_INVENTORY;
 	}
 
-	@PostMapping("/Inventory/Delete")
+	/**
+	 * 在庫削除処理（論理削除）
+	 *
+	 * @param selectedIds List Integer
+	 * @param session HttpSession
+	 * @param redirectAttributes RedirectAttributes
+	 * @return String リダイレクト先
+	 */
+	@PostMapping(AppConstants.INVENTORY_DELETE_URL)
 	public String deleteInventory(@RequestParam(required = false) List<Integer> selectedIds,
 			HttpSession session,
 			RedirectAttributes redirectAttributes) {
 
-		LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
-	    if (loginUser == null) {
-	        return "redirect:/Login";
-	    }
+		// ログイン情報をセッションから取得
+		LoginDTO loginUser = (LoginDTO) session.getAttribute(AppConstants.SESSION_LOGIN_USER);
+		if (loginUser == null) {
+			return AppConstants.REDIRECT_LOGIN;
+		}
 
-	    boolean success = inventoryService.logicalDelete(selectedIds, loginUser.getUserId());
-	    
-	    if (success) {
-	        redirectAttributes.addFlashAttribute("message", "選択した商品を削除しました。");
-	        redirectAttributes.addFlashAttribute("messageClass", "message-box success-box");
-	    } else {
-	        redirectAttributes.addFlashAttribute("message", "削除処理でエラーが発生しました。");
-	        redirectAttributes.addFlashAttribute("messageClass", "message-box error-box");
-	    }
-	    
-		return "redirect:/Inventory";
+		// 削除処理実行
+		boolean message = inventoryService.logicalDelete(selectedIds, loginUser.getUserId());
+
+		// 成否に応じてメッセージを設定
+		if (message) {
+			redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE, AppConstants.MSG_INVENTORY_DELETE_SUCCESS);
+			redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE_CLASS, AppConstants.MESSAGE_BOX_SUCCESS);
+		} else {
+			redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE, AppConstants.MSG_INVENTORY_DELETE_FAILED);
+			redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE_CLASS, AppConstants.MESSAGE_BOX_ERROR);
+		}
+
+		return AppConstants.REDIRECT_INVENTORY;
 	}
-
 }

@@ -10,12 +10,17 @@ import org.springframework.stereotype.Repository;
 
 import com.Shopping_Management.Model.DTO.UserListDTO;
 
+/**
+ * ユーザー一覧DAOクラス
+ */
 @Repository
 public class UserListDAO {
 
 	private Connection con = null;
 
-	// DB接続
+	/**
+	 * DB接続
+	 */
 	public void connect() {
 		try {
 			con = Database.getConnect();
@@ -26,6 +31,8 @@ public class UserListDAO {
 
 	/**
 	 * ユーザー全件取得
+	 *
+	 * @return List<UserListDTO> 有効なユーザーリスト
 	 */
 	public List<UserListDTO> findAll() {
 		List<UserListDTO> list = new ArrayList<>();
@@ -66,7 +73,9 @@ public class UserListDAO {
 	}
 
 	/**
-	 * ユーザーと商品詳細をトランザクションで削除
+	 * ユーザーと関連する商品詳細を削除（トランザクション）
+	 *
+	 * @param userId int 削除対象ユーザーID
 	 */
 	public void deleteUserWithDetails(int userId) {
 		PreparedStatement stmtDetail = null;
@@ -79,17 +88,17 @@ public class UserListDAO {
 			connect();
 			con.setAutoCommit(false); // トランザクション開始
 
-			// 1. 商品詳細を削除
+			// 商品詳細を削除
 			stmtDetail = con.prepareStatement(sqlDetail);
 			stmtDetail.setInt(1, userId);
 			stmtDetail.executeUpdate();
 
-			// 2. ユーザーを削除
+			// ユーザーを削除
 			stmtUser = con.prepareStatement(sqlUser);
 			stmtUser.setInt(1, userId);
 			stmtUser.executeUpdate();
 
-			// 3. 正常終了ならコミット
+			// コミット
 			con.commit();
 
 		} catch (Exception e) {
@@ -117,21 +126,28 @@ public class UserListDAO {
 
 	/**
 	 * CSVインポート
+	 *
+	 * @param dto UserListDTO インポート対象ユーザー
 	 */
 	public void insert(UserListDTO dto) {
-	    String sql = "INSERT IGNORE INTO M_USER (USER_ID, USER_NAME, PASS_WORD) VALUES (?, ?, ?)";
+		String sql = "INSERT IGNORE INTO M_USER (USER_ID, USER_NAME, PASS_WORD) VALUES (?, ?, ?)";
 
-	    try {
-	        connect();
-	        PreparedStatement stmt = con.prepareStatement(sql);
-	        stmt.setInt(1, dto.getUserId());
-	        stmt.setString(2, dto.getUserName());
-	        stmt.setString(3, dto.getPassword());
-	        stmt.executeUpdate();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    } finally {
-	        try { if (con != null) con.close(); } catch (Exception e) { e.printStackTrace(); }
-	    }
+		try {
+			connect();
+			PreparedStatement stmt = con.prepareStatement(sql);
+			stmt.setInt(1, dto.getUserId());
+			stmt.setString(2, dto.getUserName());
+			stmt.setString(3, dto.getPassword());
+			stmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

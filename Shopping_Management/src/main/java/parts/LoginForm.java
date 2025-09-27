@@ -1,16 +1,16 @@
 package parts;
 
-import org.springframework.stereotype.Component;
-
 import lombok.Data;
 
+/**
+ * ログイン画面入力フォームクラス
+ */
 @Data
-@Component
 public class LoginForm {
 
-	//ログインID
-	private String loUser;
+    /** ログインID */
+    private String loUser;
 
-	//パスワード
-	private String loPass;
+    /** パスワード */
+    private String loPass;
 }

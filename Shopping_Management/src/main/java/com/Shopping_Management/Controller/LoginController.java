@@ -16,6 +16,9 @@ import com.Shopping_Management.Model.Service.LoginService;
 import config.AppConstants;
 import parts.LoginForm;
 
+/**
+ * ログインコントローラークラス
+ */
 @Controller
 public class LoginController {
 
@@ -27,34 +30,56 @@ public class LoginController {
         this.loginLogService = loginLogService;
     }
 
-    // 初期表示
-    @GetMapping({"/","/Login"})
+    /**
+     * ログイン画面を表示
+     *
+     * @param model Model
+     * @return String 遷移先ビュー名
+     */
+    @GetMapping({"/", AppConstants.LOGIN_URL})
     public String Login(Model model) {
+        // 空のログインフォームを画面に渡す
         model.addAttribute(AppConstants.ATTR_LOGIN_FORM, new LoginForm());
+
+        // ログイン画面を表示
         return AppConstants.VIEW_LOGIN;
     }
 
-    // ログイン処理
+    /**
+     * ログイン処理
+     *
+     * @param loginForm LoginForm
+     * @param session HttpSession
+     * @param model Model
+     * @return String 遷移先ビュー名
+     */
     @PostMapping(AppConstants.LOGIN_URL)
     public String login(@ModelAttribute(AppConstants.ATTR_LOGIN_FORM) @Valid LoginForm loginForm,
                         HttpSession session,
                         Model model) {
 
+        // 入力情報で認証処理を実行
         LoginDTO loginUser = loginService.LoginUser(loginForm);
 
         if (loginUser == null) {
-            // 失敗ログ（USER_IDは取得できない為、ユーザー名の入力値を保存）
+            // 認証失敗、失敗ログを記録
             loginLogService.logFailure(loginForm.getLoUser());
 
-            model.addAttribute("message", AppConstants.MSG_LOGIN_FAILED);
-            model.addAttribute("messageClass", "message-box error-box");
+            // エラーメッセージを設定
+            model.addAttribute(AppConstants.ATTR_MESSAGE, AppConstants.MSG_LOGIN_FAILED);
+            model.addAttribute(AppConstants.ATTR_MESSAGE_CLASS, AppConstants.MESSAGE_BOX_ERROR);
+
+            // ログイン画面に戻る
             return AppConstants.VIEW_LOGIN;
         }
 
-        // 成功ログ
+        // 認証成功、成功ログを記録
         loginLogService.logSuccess(loginUser.getUserId(), loginUser.getUserName());
 
-        session.setAttribute("loginUser", loginUser);
+        // セッションにユーザー情報を保存
+        session.setAttribute(AppConstants.SESSION_LOGIN_USER, loginUser);
+
+        // ホーム画面へリダイレクト
         return AppConstants.REDIRECT_HOME;
     }
 }

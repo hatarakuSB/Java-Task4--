@@ -16,56 +16,75 @@ import com.Shopping_Management.Model.Service.PasswordChangeService;
 import config.AppConstants;
 import parts.PasswordChangeForm;
 
+/**
+ * パスワード変更コントローラークラス
+ */
 @Controller
 public class PasswordChangeController {
 
-	private final PasswordChangeService passwordChangeService;
+    private final PasswordChangeService passwordChangeService;
 
-	public PasswordChangeController(PasswordChangeService passwordChangeService) {
-		this.passwordChangeService = passwordChangeService;
-	}
+    public PasswordChangeController(PasswordChangeService passwordChangeService) {
+        this.passwordChangeService = passwordChangeService;
+    }
 
-	// 初期表示
-	@GetMapping("/PasswordChange")
-	public String showPasswordChangeForm(Model model, HttpSession session) {
-		// ログイン情報をセッションから取得
-		LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
-		if (loginUser == null) {
-			return "redirect:/Login"; // 未ログインならログイン画面へ
-		}
+    /**
+     * パスワード変更画面を表示
+     *
+     * @param model Model
+     * @param session HttpSession
+     * @return String 遷移先ビュー名
+     */
+    @GetMapping(AppConstants.PASSWORD_CHANGE_URL)
+    public String showPasswordChangeForm(Model model, HttpSession session) {
+    	// ユーザー情報をセッションから取得
+        LoginDTO loginUser = (LoginDTO) session.getAttribute(AppConstants.SESSION_LOGIN_USER);
+        if (loginUser == null) {
+            return AppConstants.REDIRECT_LOGIN;
+        }
 
-		// ユーザー情報・ページ名をセット
-		model.addAttribute("loginUser", loginUser);
-		model.addAttribute("pageTitle", AppConstants.TITLE_PASSWORD_CHANGE);
+        // ユーザー情報とページ名をセット
+        model.addAttribute(AppConstants.ATTR_LOGIN_USER, loginUser);
+        model.addAttribute(AppConstants.ATTR_PAGE_TITLE, AppConstants.TITLE_PASSWORD_CHANGE);
 
-		// フォームの初期化
-		model.addAttribute("passwordForm", new PasswordChangeForm());
-		return "PasswordChange";
-	}
+        // 入力フォームを初期化
+        model.addAttribute(AppConstants.ATTR_PASSWORD_CHANGE_FORM, new PasswordChangeForm());
 
-	// パスワード変更処理
-	@PostMapping("/PasswordChange")
-	public String changePassword(@Valid @ModelAttribute("passwordForm") PasswordChangeForm passwordChangeForm,
-			RedirectAttributes redirectAttributes,
-			HttpSession session) {
+        return AppConstants.VIEW_PASSWORD_CHANGE;
+    }
 
-		LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
-		if (loginUser == null) {
-			return "redirect:/Login";
-		}
+    /**
+     * パスワード変更処理
+     *
+     * @param passwordChangeForm PasswordChangeForm
+     * @param redirectAttributes RedirectAttributes
+     * @param session HttpSession
+     * @return String リダイレクト先
+     */
+    @PostMapping(AppConstants.PASSWORD_CHANGE_URL)
+    public String changePassword(
+            @Valid @ModelAttribute(AppConstants.ATTR_PASSWORD_CHANGE_FORM) PasswordChangeForm passwordChangeForm,
+            RedirectAttributes redirectAttributes,
+            HttpSession session) {
 
-		// Service呼び出し
-		String errorMessage = passwordChangeService.changePassword(loginUser.getUserId(), passwordChangeForm);
+    	// ユーザー情報をセッションから取得
+        LoginDTO loginUser = (LoginDTO) session.getAttribute(AppConstants.SESSION_LOGIN_USER);
+        if (loginUser == null) {
+            return AppConstants.REDIRECT_LOGIN;
+        }
 
-	    if (errorMessage != null) {
-	        // エラー（現在のパスワード不一致など）
-	        redirectAttributes.addFlashAttribute("message", errorMessage);
-	        redirectAttributes.addFlashAttribute("messageClass", "message-box error-box");
-	    } else {
-	        // 成功
-	        redirectAttributes.addFlashAttribute("message", "パスワードを変更しました");
-	        redirectAttributes.addFlashAttribute("messageClass", "message-box success-box");
-	    }
+        // サービス呼び出しでパスワード変更を実行
+        String message = passwordChangeService.changePassword(loginUser.getUserId(), passwordChangeForm);
 
-	    return "redirect:/PasswordChange";
-	}}
+        // 成否に応じてメッセージを設定
+        if (message != null) {
+            redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE, message);
+            redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE_CLASS, AppConstants.MESSAGE_BOX_ERROR);
+        } else {
+            redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE, AppConstants.MSG_PASSWORD_CHANGE_SUCCESS);
+            redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE_CLASS, AppConstants.MESSAGE_BOX_SUCCESS);
+        }
+
+        return AppConstants.REDIRECT_PASSWORD_CHANGE;
+    }
+}

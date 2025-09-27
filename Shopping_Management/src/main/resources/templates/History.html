@@ -2,122 +2,127 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<meta charset="UTF-8">
-	<link rel="stylesheet" th:href="@{/css/header.css}" type="text/css">
-	<link rel="stylesheet" th:href="@{/css/History.css}" type="text/css">
-	<!-- flatpickr カレンダー用 -->
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-	<script src="/js/History.js" defer></script>
-	<title>買い物履歴</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/header.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/History.css}" type="text/css">
+
+    <!-- カレンダー用ライブラリ（flatpickr） -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <script src="/js/History.js" defer></script>
+    <title>買い物履歴</title>
 </head>
 
 <body>
-	<!-- 共通ヘッダー -->
-	<div th:replace="common/header :: header"></div>
-	
-	<!-- サーバー・クライアント共通メッセージ枠 -->
-	<div id="messageBox"
-	     th:utext="${message}"
-	     th:class="${messageClass}"
-	     th:attr="style=${message != null} ? '' : 'display:none;'">
-	</div>
+    <!-- 共通ヘッダー -->
+    <div th:replace="common/header :: header"></div>
+    
+    <!-- メッセージエリア（エラー・成功メッセージを表示） -->
+    <div id="messageBox"
+         th:utext="${message}"
+         th:class="${messageClass}"
+         th:attr="style=${message != null} ? '' : 'display:none;'">
+    </div>
 
-		<div class="form-container">
-			
-		<!-- カテゴリプルダウン -->
-		<form th:action="@{/History}" method="get" class="form-table">
-			<div class="form-row">
-			    <label>カテゴリ</label>
-			    <select name="categoryId" onchange="this.form.submit()">
-			        <option value="">--選択してください--</option>
-			        <option th:each="cat : ${categoryList}"
-			                th:value="${cat.categoryId}"
-			                th:text="${cat.categoryName}"
-			                th:selected="${cat.categoryId == selectedCategoryId}">
-			        </option>
-			    </select>
-			</div>
-		</form>
-		
-		<!-- 商品名プルダウン -->
-		<form th:action="@{/History}" method="get" class="form-table">
-			<div class="form-row">
-			    <label>商品名</label>
-			    <input type="hidden" name="categoryId" th:value="${selectedCategoryId}" />
-			    <select name="productId" onchange="this.form.submit()">
-			        <option value="">--選択してください--</option>
-			        <option th:each="prod : ${productList}"
-			                th:value="${prod.productId}"
-			                th:text="${prod.productName}"
-			                th:selected="${prod.productId == selectedProductId}">
-			        </option>
-			    </select>
-			</div>
-		</form>
-		
-		<!-- 検索フォーム -->
-		<form id="historyForm" th:action="@{/History}" th:object="${historyForm}" method="post" class="form-table">
-			
-			<input type="hidden" th:field="*{categoryId}" th:value="${selectedCategoryId}" />
-			<input type="hidden" th:field="*{productId}" th:value="${selectedProductId}" />
+    <!-- 検索条件入力プルダウン -->
+    <div class="form-container">
+        
+        <!-- カテゴリ選択プルダウン -->
+        <form th:action="@{/History}" method="get" class="form-table">
+            <div class="form-row">
+                <label>カテゴリ</label>
+                <select name="categoryId" onchange="this.form.submit()">
+                    <option value="">--選択してください--</option>
+                    <option th:each="cat : ${categoryList}"
+                            th:value="${cat.categoryId}"
+                            th:text="${cat.categoryName}"
+                            th:selected="${cat.categoryId == selectedCategoryId}">
+                    </option>
+                </select>
+            </div>
+        </form>
+        
+        <!-- 商品選択フォーム -->
+        <form th:action="@{/History}" method="get" class="form-table">
+            <div class="form-row">
+                <label>商品名</label>
+                <input type="hidden" name="categoryId" th:value="${selectedCategoryId}" />
+                <select name="productId" onchange="this.form.submit()">
+                    <option value="">--選択してください--</option>
+                    <option th:each="prod : ${productList}"
+                            th:value="${prod.productId}"
+                            th:text="${prod.productName}"
+                            th:selected="${prod.productId == selectedProductId}"></option>
+                </select>
+            </div>
+        </form>
+        
+        <!-- 詳細検索フォーム（場所・金額・日付） -->
+        <form id="historyForm" th:action="@{/History}" th:object="${historyForm}" method="post" class="form-table">
+            <!-- カテゴリID・商品IDは hidden で保持 -->
+            <input type="hidden" th:field="*{categoryId}" th:value="${selectedCategoryId}" />
+            <input type="hidden" th:field="*{productId}" th:value="${selectedProductId}" />
 
-			<div class="form-row">
-			    <label>場所</label>
-			    <input type="text" th:field="*{place}" maxlength="20" />
-			</div>
+            <!-- 入力欄：場所 -->
+            <div class="form-row">
+                <label>場所</label>
+                <input type="text" th:field="*{place}" maxlength="20" />
+            </div>
 
-			<div class="form-row">
-			    <label>金額</label>
-			    <input type="text" th:field="*{moneyFrom}" maxlength="6" /> ～
-			    <input type="text" th:field="*{moneyTo}" maxlength="6" />
-			</div>
+            <!-- 入力欄：金額範囲 -->
+            <div class="form-row">
+                <label>金額</label>
+                <input type="text" th:field="*{moneyFrom}" maxlength="6" /> ～
+                <input type="text" th:field="*{moneyTo}" maxlength="6" />
+            </div>
 
-			<div class="form-row">
-			    <label for="dateFrom">日付</label>
-			    <input type="text" id="dateFrom" th:field="*{dateFrom}" placeholder="yyyy/MM/dd" />
-			    ～
-			    <input type="text" id="dateTo" th:field="*{dateTo}" placeholder="yyyy/MM/dd" />
-			</div>
-			
-			<div class="form-row button-row">
-			    <button type="submit">検索</button>
-			</div>
-		</form>
-	</div>
+            <!-- 入力欄：日付範囲 -->
+            <div class="form-row">
+                <label for="dateFrom">日付</label>
+                <input type="text" id="dateFrom" th:field="*{dateFrom}" placeholder="yyyy/MM/dd" />
+                ～
+                <input type="text" id="dateTo" th:field="*{dateTo}" placeholder="yyyy/MM/dd" />
+            </div>
+            
+            <!-- ボタンエリア -->
+            <div class="form-row button-row">
+                <button type="submit">検索</button>
+            </div>
+        </form>
+    </div>
 
-	<!-- 履歴テーブル -->
-	<div class="result-container">
-		<table border="1" class="result-table">
-		    <thead>
-		        <tr>
-		            <th>カテゴリ</th>
-		            <th>商品名</th>
-		            <th>金額</th>
-		            <th>場所</th>
-		            <th>日付</th>
-		        </tr>
-		    </thead>
-			<tbody>
-			    <!-- 実データの行 -->
-			    <tr th:each="item : ${items}">
-			        <td th:text="${item.categoryName}">カテゴリ</td>
-			        <td th:text="${item.productName}">商品名</td>
-			        <td th:text="${item.amount + '¥'}">金額</td>
-			        <td th:text="${item.place}">場所</td>
-			        <td th:text="${item.buyDate}">日付</td>
-			    </tr>
+    <!-- 検索結果テーブル -->
+    <div class="result-container">
+        <table border="1" class="result-table">
+            <thead>
+                <tr>
+                    <th>カテゴリ</th>
+                    <th>商品名</th>
+                    <th>金額</th>
+                    <th>場所</th>
+                    <th>日付</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="item : ${items}">
+                    <td th:text="${item.categoryName}">カテゴリ</td>
+                    <td th:text="${item.productName}">商品名</td>
+                    <td th:text="${item.amount + '¥'}">金額</td>
+                    <td th:text="${item.place}">場所</td>
+                    <td th:text="${item.buyDate}">日付</td>
+                </tr>
 
-			    <!-- 空白行で補完（items.size() が5未満なら追加表示） -->
-			    <tr th:each="i : ${#numbers.sequence(items.size() + 1, 5)}">
-			        <td>&nbsp;</td>
-			        <td></td>
-			        <td></td>
-			        <td></td>
-			        <td></td>
-			    </tr>
-			</tbody>
-		</table>
-	</div>
+                <!-- データが5件未満の場合は空行で補完 -->
+                <tr th:each="i : ${#numbers.sequence(items.size() + 1, 5)}">
+                    <td>&nbsp;</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>

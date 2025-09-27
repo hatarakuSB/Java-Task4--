@@ -6,18 +6,26 @@ import java.sql.ResultSet;
 
 import org.springframework.stereotype.Repository;
 
+/**
+ * パスワード変更DAOクラス
+ */
 @Repository
 public class PasswordChangeDAO {
 
     private Connection con = null;
 
-    // DB接続
+    /**
+     * DB接続
+     */
     private void connect() throws Exception {
         con = Database.getConnect();
     }
 
     /**
      * ユーザーIDから現在のパスワードを取得
+     *
+     * @param userId int
+     * @return String 現在のパスワード（存在しない場合は null）
      */
     public String getPasswordByUserId(int userId) {
         String sql = "SELECT PASS_WORD FROM M_USER WHERE USER_ID = ? AND DELETE_FLAG = 0";
@@ -38,6 +46,10 @@ public class PasswordChangeDAO {
 
     /**
      * パスワード更新処理
+     *
+     * @param userId int
+     * @param newPassword String
+     * @return int 更新件数
      */
     public int updatePassword(int userId, String newPassword) {
         String sql = "UPDATE M_USER SET PASS_WORD = ? WHERE USER_ID = ? AND DELETE_FLAG = 0";
@@ -47,7 +59,7 @@ public class PasswordChangeDAO {
             ps.setString(1, newPassword);
             ps.setInt(2, userId);
 
-            return ps.executeUpdate(); // 更新件数を返す
+            return ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }

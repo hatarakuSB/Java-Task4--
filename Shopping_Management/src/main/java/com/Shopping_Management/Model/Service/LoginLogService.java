@@ -10,76 +10,82 @@ import org.springframework.stereotype.Service;
 
 import com.Shopping_Management.Model.DAO.LoginLogDAO;
 
+import config.AppConstants;
+
+/**
+ * ログインログサービスクラス
+ */
 @Service
 public class LoginLogService {
 
     private final LoginLogDAO loginLogDAO;
-
-    // ログ保存ディレクトリ
-    private static final String LOG_DIR = "logs";
 
     public LoginLogService(LoginLogDAO loginLogDAO) {
         this.loginLogDAO = loginLogDAO;
     }
 
     /**
-     * ログイン成功
+     * ログイン成功を記録
+     *
+     * @param userId Integer
+     * @param loginUserName String 
      */
     public void logSuccess(Integer userId, String loginUserName) {
-        // DBに保存
-        loginLogDAO.insertLog(userId, loginUserName, "01");
-        // CSVに保存
-        writeCsv("01", userId, loginUserName, "成功");
+        loginLogDAO.insertLog(userId, loginUserName, AppConstants.LOG_EVENT_SUCCESS);
+        writeCsv(AppConstants.LOG_EVENT_SUCCESS, userId, loginUserName, AppConstants.LOG_EVENT_NAME_SUCCESS);
     }
 
     /**
-     * ログイン失敗
+     * ログイン失敗を記録
+     *
+     * @param loginUserName String
      */
     public void logFailure(String loginUserName) {
-        loginLogDAO.insertLog(null, loginUserName, "02");
-        writeCsv("02", null, loginUserName, "失敗");
+        loginLogDAO.insertLog(null, loginUserName, AppConstants.LOG_EVENT_FAILURE);
+        writeCsv(AppConstants.LOG_EVENT_FAILURE, null, loginUserName, AppConstants.LOG_EVENT_NAME_FAILURE);
     }
 
     /**
-     * ログアウト
+     * ログアウトを記録
+     *
+     * @param userId Integer
+     * @param loginUserName String
      */
     public void logLogout(Integer userId, String loginUserName) {
-        loginLogDAO.insertLog(userId, loginUserName, "03");
-        writeCsv("03", userId, loginUserName, "ログアウト");
+        loginLogDAO.insertLog(userId, loginUserName, AppConstants.LOG_EVENT_LOGOUT);
+        writeCsv(AppConstants.LOG_EVENT_LOGOUT, userId, loginUserName, AppConstants.LOG_EVENT_NAME_LOGOUT);
     }
 
     /**
-     * CSV出力（日ごとにファイルを分ける）
+     * CSVログファイルに追記
+     *
+     * @param eventCode String
+     * @param userId Integer
+     * @param loginUserName String
+     * @param eventName String
      */
     private void writeCsv(String eventCode, Integer userId, String loginUserName, String eventName) {
         try {
-            // 日付でファイル名を分ける
-            String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-            String fileName = LOG_DIR + "/login_log_" + date + ".csv";
+            String date = new SimpleDateFormat(AppConstants.DATE_FORMAT_LOG_FILE).format(new Date());
+            String fileName = AppConstants.LOG_DIR + "/login_log_" + date + ".csv";
 
-            // 時刻
-            String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+            String timestamp = new SimpleDateFormat(AppConstants.DATE_FORMAT_LOG_TIMESTAMP).format(new Date());
 
-            // ディレクトリ作成（存在しなければ）
-            java.nio.file.Files.createDirectories(java.nio.file.Paths.get(LOG_DIR));
+            java.nio.file.Files.createDirectories(java.nio.file.Paths.get(AppConstants.LOG_DIR));
 
-            // 追記モードで書き込み
             try (FileWriter fw = new FileWriter(fileName, true);
                  PrintWriter pw = new PrintWriter(fw)) {
 
-            	String line = String.format("%s,%s,%s,%s,%s",
+                String line = String.format("%s,%s,%s,%s,%s",
                         timestamp,
                         eventCode,
                         userId == null ? "" : userId.toString(),
                         loginUserName,
                         eventName);
 
-                // ファイルに出力
                 pw.println(line);
-
-                // コンソールにも出力
-                System.out.println("[LOGIN_LOG] " + line); 
-                }
+                System.out.println("[LOGIN_LOG] " + line);
+            }
 
         } catch (IOException e) {
             e.printStackTrace();

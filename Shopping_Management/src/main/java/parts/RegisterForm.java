@@ -1,26 +1,25 @@
 package parts;
 
-import org.springframework.stereotype.Component;
-
 import lombok.Data;
 
+/**
+ * 商品登録フォームクラス
+ */
 @Data
-@Component
 public class RegisterForm {
-	
-	//カテゴリ名
-	private Integer  categoryId;
-	
-	//商品名
-	private Integer  productId;
-	
-	//金額
-	private String amount;
-	
-	//場所
-	private String place;
-	
-	//日付
-	private String buyDate;
 
+    /** カテゴリID */
+    private Integer categoryId;
+
+    /** 商品ID */
+    private Integer productId;
+
+    /** 金額 */
+    private String amount;
+
+    /** 場所 */
+    private String place;
+
+    /** 購入日 */
+    private String buyDate;
 }

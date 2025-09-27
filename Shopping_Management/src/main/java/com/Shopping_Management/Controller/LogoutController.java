@@ -7,10 +7,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.Shopping_Management.Model.DTO.LoginDTO;
-import com.Shopping_Management.Model.Service.LoginLogService; // ← 追加
+import com.Shopping_Management.Model.Service.LoginLogService;
 
 import config.AppConstants;
 
+/**
+ * ログアウト処理コントローラークラス
+ */
 @Controller
 public class LogoutController {
 
@@ -20,10 +23,17 @@ public class LogoutController {
         this.loginLogService = loginLogService;
     }
 
-    @GetMapping("/Logout")
+    /**
+     * ログアウト処理
+     *
+     * @param session HttpSession
+     * @param redirectAttributes RedirectAttributes
+     * @return String ログイン画面へリダイレクト
+     */
+    @GetMapping(AppConstants.LOGOUT_URL)
     public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
         // ユーザー情報を取得
-        LoginDTO loginUser = (LoginDTO) session.getAttribute("loginUser");
+        LoginDTO loginUser = (LoginDTO) session.getAttribute(AppConstants.SESSION_LOGIN_USER);
 
         if (loginUser != null) {
             // ログアウトログを記録
@@ -33,9 +43,9 @@ public class LogoutController {
         // セッション破棄
         session.invalidate();
 
-        // ログアウトメッセージをセット
-        redirectAttributes.addFlashAttribute("message", "ログアウトされました");
-        redirectAttributes.addFlashAttribute("messageClass", "message-box logout-box");
+        // ログアウト完了メッセージをセット
+        redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE, AppConstants.MSG_LOGOUT_SUCCESS);
+        redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE_CLASS, AppConstants.MESSAGE_BOX_LOGOUT);
 
         // ログイン画面へリダイレクト
         return "redirect:" + AppConstants.LOGIN_URL;

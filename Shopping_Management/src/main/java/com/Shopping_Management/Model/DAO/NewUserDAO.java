@@ -8,10 +8,16 @@ import org.springframework.stereotype.Repository;
 
 import parts.NewUserForm;
 
-@Repository 
+/**
+ * 新規ユーザー登録DAOクラス
+ */
+@Repository
 public class NewUserDAO {
 	private Connection con = null;
 
+	/**
+	 * DB接続
+	 */
 	public void connect() {
 		try {
 			con = Database.getConnect();
@@ -20,7 +26,12 @@ public class NewUserDAO {
 		}
 	}
 
-	// ユーザー名の重複チェック
+	/**
+	 * ユーザー名の重複を確認
+	 *
+	 * @param username String
+	 * @return boolean
+	 */
 	public boolean existsByUsername(String username) {
 		String sql = "SELECT COUNT(*) FROM m_user WHERE user_name = ?";
 		boolean exists = false;
@@ -46,7 +57,11 @@ public class NewUserDAO {
 		return exists;
 	}
 
-	// 新規ユーザー登録
+	/**
+	 * 新規ユーザーを登録
+	 *
+	 * @param user NewUserForm
+	 */
 	public void newUserInsert(NewUserForm user) {
 		String sql = "INSERT INTO m_user(user_name, pass_word) VALUES (?, ?)";
 
