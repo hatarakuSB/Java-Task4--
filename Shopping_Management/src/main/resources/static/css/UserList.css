@@ -1,0 +1,110 @@
+@charset "UTF-8";
+
+/* 全体 */
+body {
+  background-color: #fff;
+  font-family: "メイリオ", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* レイアウト：テーブルとCSVボタンを横並び */
+.userlist-container {
+  display: flex;
+  gap: 40px;              /* テーブルとボタンの間隔 */
+  align-items: flex-start; /* 上端を揃える */
+  justify-content: center; /* 中央寄せ */
+  margin-top: 30px;
+}
+
+/* ユーザー一覧テーブル */
+#tblUsers {
+  border-collapse: collapse;
+  width: 600px; /* テーブル全体幅 */
+}
+
+#tblUsers th,
+#tblUsers td {
+  border: 1px solid #000;
+  text-align: center;
+  padding: 8px;
+  white-space: nowrap; /* 改行させない */
+}
+
+#tblUsers th {
+  background-color: #f57c00;
+  color: #fff;
+  font-weight: bold;
+}
+
+#tblUsers th:nth-child(1),
+#tblUsers td:nth-child(1) {
+  width: 60px;
+}
+#tblUsers th:nth-child(2),
+#tblUsers td:nth-child(2) {
+  width: 200px; /* ユーザー名 */
+}
+
+#tblUsers th:nth-child(3),
+#tblUsers td:nth-child(3) {
+  width: 200px; /* パスワード */
+}
+
+/* 削除ボタン */
+.delete-btn-wrapper {
+  text-align: center;
+  margin-top: 15px;
+}
+
+#btnDelete {
+  padding: 8px 20px;
+  background-color: #f57c00;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+#btnDelete:hover {
+  background-color: #e66b00;
+}
+
+/* CSV ボタン縦並び */
+.csv-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;  /* ボタン間の余白 */
+}
+
+.csv-buttons button {
+  padding: 8px 15px;
+  border: 1px solid #000;
+  background: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.csv-buttons button:hover {
+  background: #f1f1f1;
+}
+
+/* 共通メッセージ枠 */
+.message-box {
+  padding: 10px;
+  margin: 10px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.error-box {
+  background-color: #ffe5e5;
+  color: #c00;
+  border: 1px solid #c00;
+}
+
+.success-box {
+  background-color: #e5ffe5;
+  color: #080;
+  border: 1px solid #080;
+}

@@ -1,0 +1,107 @@
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px auto;
+}
+
+.form-table {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 600px;
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form-row label {
+    flex: 0 0 100px;
+    font-weight: bold;
+}
+
+.form-row input,
+.form-row select {
+    flex: 1;
+    padding: 6px 10px;
+    border: 1px solid #000;
+    box-sizing: border-box;
+    height: 36px;
+    font-size: 14px;
+}
+
+.button-row {
+    justify-content: center;
+    margin-top: 10px;
+}
+
+button {
+    padding: 8px 20px;
+    border: none;
+    background-color: #f57c00;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 4px;
+}
+
+button:hover {
+    background-color: #e66b00;
+}
+
+
+.result-container {
+    display: flex;
+    justify-content: center;
+    margin: 30px auto;
+    max-height: 400px;
+    overflow-y: auto;
+    width: 100%;   /* ← 親を全幅に */
+}
+
+.result-table {
+    border-collapse: collapse;
+    width: 90%;          /* 中央寄せ */
+    max-width: 1000px;
+    margin: 0 auto;      /* ← テーブル自体を中央揃え */
+    font-size: 16px;
+    text-align: center;
+}
+
+.result-table th,
+.result-table td {
+    border: 1px solid #000;
+    padding: 8px;
+}
+
+
+.result-table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #f57c00;
+    color: #fff;
+    font-weight: bold;
+    z-index: 1;  
+}
+
+.result-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+/* ===== 共通メッセージエリア ===== */
+.message-box {
+    padding: 10px;
+    margin: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.error-box {
+    background-color: #ffe5e5;
+    color: #c00;
+    border: 1px solid #c00;
+}
+
