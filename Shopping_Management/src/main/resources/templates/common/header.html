@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/header.css}" type="text/css">
+    <title>header</title>
+</head>
+<body>
+    <!-- 共通ヘッダーフラグメント -->
+    <div th:fragment="header">
+        
+        <!-- システム名とログアウトリンク -->
+        <div class="header">
+            <div class="left-area">
+                <span class="system-name">買い物管理システム</span>
+            </div>
+            <div class="right-area">
+                <div class="top-right">
+                    <a th:href="@{/Logout}" class="logout-link">ログアウト</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- メニューバー -->
+        <div class="menu">
+            <div class="menu-links">
+                <a th:href="@{/Home}">ホーム</a>
+                <a th:href="@{/Register}">登録</a>
+                <a th:href="@{/History}">履歴</a>
+                <a th:href="@{/Inventory}">在庫</a>
+                <a th:href="@{/PasswordChange}">パスワード変更</a>
+            </div>
+
+            <!-- ログインユーザー名 -->
+            <span class="user-name" th:if="${loginUser != null}">
+                ユーザ名：<span th:text="${loginUser.userName}"></span>
+            </span>
+        </div>
+        
+        <!-- 区切り線 -->
+        <div class="divider"></div>
+        
+        <!-- ページタイトル -->
+        <div class="page-title">
+            <span th:text="${pageTitle}">各ページ名</span>
+        </div>
+
+    </div>
+</body>
+</html>

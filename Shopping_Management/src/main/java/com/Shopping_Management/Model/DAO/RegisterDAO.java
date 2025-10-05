@@ -2,19 +2,22 @@ package com.Shopping_Management.Model.DAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
 
 import org.springframework.stereotype.Repository;
 
 import parts.RegisterForm;
 
+/**
+ * 登録DAOクラス
+ */
 @Repository
 public class RegisterDAO {
 
     private Connection con = null;
 
-    // DB接続
+    /**
+     * DB接続を行う
+     */
     public void connect() {
         try {
             con = Database.getConnect();
@@ -23,46 +26,36 @@ public class RegisterDAO {
         }
     }
 
-    // 登録処理
-    public void register(RegisterForm registerForm, int userId) {
+    /**
+     * 登録処理を実行
+     *
+     * @param registerForm RegisterForm
+     * @param userId int
+     * @return boolean 登録成功ならtrue、失敗ならfalse
+     */
+    public boolean register(RegisterForm registerForm, int userId) {
+        boolean result = false;
         try {
             connect();
 
-            String sql1 = "INSERT INTO M_PRODUCT (USER_ID,TRADE_NAME, DELETE_FLAG) VALUES (?, ?, 0)";
-            PreparedStatement stmt1 = con.prepareStatement(sql1, Statement.RETURN_GENERATED_KEYS);
-            stmt1.setInt(1, userId);
-            stmt1.setString(2, registerForm.getProductName());
+            String sql = "INSERT INTO T_PRODUCT_DETAIL "
+                       + "(PRODUCT_ID, AMOUNT, PLACE, DATE, DELETE_FLAG, USER_ID) "
+                       + "VALUES (?, ?, ?, ?, 0, ?)";
 
-            stmt1.executeUpdate();
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, registerForm.getProductId());
+            stmt.setString(2, registerForm.getAmount());
+            stmt.setString(3, registerForm.getPlace());
+            stmt.setString(4, registerForm.getBuyDate());
+            stmt.setInt(5, userId);
 
-            // PRODUCT_IDを取得
-            ResultSet rs = stmt1.getGeneratedKeys();
-            //初期値
-            int productId = -1;
-            if (rs.next()) {
-                productId = rs.getInt(1);
-            } else {
-                throw new Exception("PRODUCT_ID の取得に失敗しました。");
-            }
-
-            String sql2 = "INSERT INTO PRODUCT_DETAIL (PRODUCT_ID, PRICE, PLACE, BUY_DATE, DELETE_FLAG, USER_ID) VALUES (?, ?, ?, ?, 0, ?)";
-            PreparedStatement stmt2 = con.prepareStatement(sql2);
-            stmt2.setInt(1, productId);
-            stmt2.setString(2, registerForm.getAmount());
-            stmt2.setString(3, registerForm.getPlace());
-            stmt2.setString(4, registerForm.getBuyDate());
-            stmt2.setInt(5, userId); 
-
-            stmt2.executeUpdate();
-
+            int rows = stmt.executeUpdate();
+            result = (rows > 0); 
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            try {
-                con.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            try { con.close(); } catch (Exception e) { e.printStackTrace(); }
         }
+        return result;
     }
 }

@@ -6,12 +6,18 @@ import java.sql.ResultSet;
 
 import org.springframework.stereotype.Repository;
 
-import com.Shopping_Management.Model.DTO.UserDTO;
+import parts.NewUserForm;
 
-@Repository 
-public class UserDAO {
+/**
+ * 新規ユーザー登録DAOクラス
+ */
+@Repository
+public class NewUserDAO {
 	private Connection con = null;
 
+	/**
+	 * DB接続
+	 */
 	public void connect() {
 		try {
 			con = Database.getConnect();
@@ -20,7 +26,12 @@ public class UserDAO {
 		}
 	}
 
-	// ユーザー名の重複チェック
+	/**
+	 * ユーザー名の重複を確認
+	 *
+	 * @param username String
+	 * @return boolean
+	 */
 	public boolean existsByUsername(String username) {
 		String sql = "SELECT COUNT(*) FROM m_user WHERE user_name = ?";
 		boolean exists = false;
@@ -46,8 +57,12 @@ public class UserDAO {
 		return exists;
 	}
 
-	// 新規登録
-	public void insert(UserDTO user) {
+	/**
+	 * 新規ユーザーを登録
+	 *
+	 * @param user NewUserForm
+	 */
+	public void newUserInsert(NewUserForm user) {
 		String sql = "INSERT INTO m_user(user_name, pass_word) VALUES (?, ?)";
 
 		try {

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ホーム</title>
+    <link rel="stylesheet" th:href="@{/css/header.css}" type="text/css">
+	<link rel="stylesheet" th:href="@{/css/Home.css}" type="text/css">
+</head>
+<body>
+    <!-- 共通ヘッダー -->
+    <div th:replace="common/header :: header"></div>
+	<!-- ホームリンク一覧 -->
+    <main class="home-main">
+        <h2>ようこそ、買い物管理システムへ</h2>
+
+        <nav class="home-links">
+            <a th:href="@{/Register}">登録</a><br>
+            <a th:href="@{/History}">履歴</a><br>
+            <a th:href="@{/Inventory}">在庫</a><br>
+            <a th:href="@{/PasswordChange}">パスワード変更</a><br>
+			<a th:href="@{/Todo}"target="_blank">Todoアプリ</a><br>
+			<!-- 管理者のみ表示 -->
+            <a th:if="${authority}" th:href="@{/UserList}">ユーザー一覧</a>
+        </nav>
+    </main>
+</body>
+</html>

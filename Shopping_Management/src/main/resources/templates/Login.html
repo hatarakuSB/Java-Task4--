@@ -4,32 +4,36 @@
 <head>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" th:href="@{/css/Login.css}" type="text/css">
+	<script th:src="@{/js/Login.js}" defer></script>
 	<title>Login</title>
 </head>
 
 <body>
 	<div class="container">
-		<form th:action="@{/Login}" th:object="${loginForm}" method="post">
-			<h2><p class="fsize">ログイン画面</p></h2>
-
-			<!-- ログインエラーメッセージ -->
-			<p th:if="${loginError}" th:text="${loginError}" class="error"></p>
-
-			<input type="text" th:field="*{loUser}" placeholder="Username" maxlength="8" />
-			<div th:if="${#fields.hasErrors('loUser')}" th:errors="*{loUser}"></div>
-
-			<input type="password" th:field="*{loPass}" placeholder="Password" maxlength="8" />
-			<div th:if="${#fields.hasErrors('loPass')}" th:errors="*{loPass}"></div>
-
-			<!-- ログインボタン -->
-			<div>
-				<button type="submit">ログイン</button>
+		<!-- ログインフォーム -->
+		<form id="loginForm" th:action="@{/Login}" th:object="${loginForm}" method="post">
+			
+			<!-- メッセージエリア（エラー・成功メッセージを表示） -->
+			<div id="messageBox"
+			     th:text="${message}"
+			     th:class="${messageClass}"
+			     th:attr="style=${message != null} ? '' : 'display:none;'">
 			</div>
-		</form>
 
-		<!-- 新規登録ボタン -->
-		<form th:action="@{/NewUser}" method="get">
-			<button type="submit">新規登録</button>
+			<!-- 画面タイトル -->
+			<h2 class="fsize">ログイン画面</h2>
+
+			<!-- 入力欄：ユーザー名 -->
+			<input type="text" th:field="*{loUser}" placeholder="Username" maxlength="8" />
+
+			<!-- 入力欄：パスワード -->
+			<input type="password" th:field="*{loPass}" placeholder="Password" maxlength="8" />
+
+			<!-- ボタンエリア -->
+			<div class="button-group">
+				<button type="submit">ログイン</button>
+				<button type="button" onclick="location.href='/NewUser'">新規登録</button>
+			</div>
 		</form>
 	</div>
 </body>

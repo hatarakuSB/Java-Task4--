@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ユーザー一覧</title>
+    <link rel="stylesheet" th:href="@{/css/UserList.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/header.css}" type="text/css">
+    <script th:src="@{/js/UserList.js}" defer></script>
+</head>
+<body>
+    <!-- 共通ヘッダー -->
+    <div th:replace="common/header :: header"></div>
+
+    <!-- メッセージエリア（エラー・成功メッセージを表示） -->
+    <div id="messageBox"
+         th:text="${message}"
+         th:class="${messageClass}"
+         th:attr="style=${message != null} ? '' : 'display:none;'">
+    </div>
+
+    <div class="container">
+        <div class="userlist-container">
+            
+            <!-- ユーザー一覧テーブル -->
+            <form th:action="@{/UserList/Delete}" method="post" id="frmUserList">
+                <table id="tblUsers" border="1">
+                    <thead>
+                        <tr>
+                            <th>削除</th>
+                            <th>ユーザー名</th>
+                            <th>パスワード</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="user : ${users}">
+                            <td><input type="checkbox" name="deleteIds" th:value="${user.userId}" /></td>
+                            <td th:text="${user.userName}"></td>
+                            <td th:text="${user.password}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- 削除ボタン -->
+                <div class="delete-btn-wrapper">
+                    <button type="submit" id="btnDelete">削除</button>
+                </div>
+            </form>
+
+            <!-- CSVインポート/エクスポート操作 -->
+            <div class="csv-buttons">
+                <!-- CSVインポート -->
+                <form id="csvImportForm" th:action="@{/UserList/Import}" method="post" enctype="multipart/form-data">
+                    <input type="file" id="fileInput" name="file" accept=".csv" style="display:none" />
+                    <button type="button" id="btnCsvImport">CSVインポート</button>
+                </form>
+
+                <!-- CSVエクスポート -->
+                <form th:action="@{/UserList/Export}" method="get">
+                    <button type="submit" id="btnCsvExport">CSVエクスポート</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
