@@ -36,15 +36,22 @@ public class PasswordChangeController {
      * @return String 遷移先ビュー名
      */
     @GetMapping(AppConstants.PASSWORD_CHANGE_URL)
-    public String showPasswordChangeForm(Model model, HttpSession session) {
+    public String showPasswordChangeForm(Model model, HttpSession session, RedirectAttributes redirectAttributes) {
+    	
     	// ユーザー情報をセッションから取得
         LoginDTO loginUser = (LoginDTO) session.getAttribute(AppConstants.SESSION_LOGIN_USER);
-        if (loginUser == null) {
-            return AppConstants.REDIRECT_LOGIN;
-        }
-
-        // ユーザー情報とページ名をセット
+		// ログイン情報取得に失敗時、ログイン画面に戻る
+		if (loginUser == null) {
+			redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE, AppConstants.MSG_SYSTEM_ERROR);
+			redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE_CLASS,AppConstants.MESSAGE_BOX_SYSTEM_ERROR);
+			return AppConstants.REDIRECT_LOGIN;
+		}
         model.addAttribute(AppConstants.ATTR_LOGIN_USER, loginUser);
+        
+		// 権限を設定
+		model.addAttribute(AppConstants.ATTR_AUTHORITY, loginUser.isAuthority());
+
+		// ページタイトルを設定
         model.addAttribute(AppConstants.ATTR_PAGE_TITLE, AppConstants.TITLE_PASSWORD_CHANGE);
 
         // 入力フォームを初期化
@@ -69,9 +76,12 @@ public class PasswordChangeController {
 
     	// ユーザー情報をセッションから取得
         LoginDTO loginUser = (LoginDTO) session.getAttribute(AppConstants.SESSION_LOGIN_USER);
-        if (loginUser == null) {
-            return AppConstants.REDIRECT_LOGIN;
-        }
+		// ログイン情報取得に失敗時、ログイン画面に戻る
+		if (loginUser == null) {
+			redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE, AppConstants.MSG_SYSTEM_ERROR);
+			redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE_CLASS,AppConstants.MESSAGE_BOX_SYSTEM_ERROR);
+			return AppConstants.REDIRECT_LOGIN;
+		}
 
         // サービス呼び出しでパスワード変更を実行
         String message = passwordChangeService.changePassword(loginUser.getUserId(), passwordChangeForm);

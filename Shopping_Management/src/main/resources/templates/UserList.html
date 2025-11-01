@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>ユーザー一覧</title>
-    <link rel="stylesheet" th:href="@{/css/UserList.css}" type="text/css">
     <link rel="stylesheet" th:href="@{/css/header.css}" type="text/css">
+	<link rel="stylesheet" th:href="@{/css/UserList.css}" type="text/css">
     <script th:src="@{/js/UserList.js}" defer></script>
 </head>
 <body>
@@ -13,7 +13,7 @@
 
     <!-- メッセージエリア（エラー・成功メッセージを表示） -->
     <div id="messageBox"
-         th:text="${message}"
+         th:utext="${message}"
          th:class="${messageClass}"
          th:attr="style=${message != null} ? '' : 'display:none;'">
     </div>
@@ -37,6 +37,13 @@
                             <td th:text="${user.userName}"></td>
                             <td th:text="${user.password}"></td>
                         </tr>
+						<!-- データが10件未満の場合のみ空行を補完 -->
+						<tr th:if="${users.size() < 10}" 
+						    th:each="i : ${#numbers.sequence(users.size() + 1, 10)}">
+						    <td>&nbsp;</td>
+						    <td></td>
+						    <td></td>
+						</tr>
                     </tbody>
                 </table>
 

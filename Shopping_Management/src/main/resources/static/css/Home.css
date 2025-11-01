@@ -1,10 +1,10 @@
 .home-main h2 {
-    font-size: 28px;      /* 見出しは大きめ */
-    margin-bottom: 20px;  /* 下に余白 */
+    font-size: 28px;      
+    margin-bottom: 20px; 
 }
 
 .home-links a {
-    font-size: 24px;      /* 本文より少し大きめ */
-    color: black;         /* 黒に統一 */
-    margin: 20px 0;       /* 上下に余白 */
+    font-size: 24px;      
+    color: black;       
+    margin: 20px 0;    
 }

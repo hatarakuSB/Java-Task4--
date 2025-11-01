@@ -33,7 +33,7 @@ public class NewUserDAO {
 	 * @return boolean
 	 */
 	public boolean existsByUsername(String username) {
-		String sql = "SELECT COUNT(*) FROM m_user WHERE user_name = ?";
+		String sql = "SELECT COUNT(USER_NAME) FROM m_user WHERE user_name = ?";
 		boolean exists = false;
 
 		try {

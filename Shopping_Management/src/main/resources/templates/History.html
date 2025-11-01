@@ -60,6 +60,7 @@
         
         <!-- 詳細検索フォーム（場所・金額・日付） -->
         <form id="historyForm" th:action="@{/History}" th:object="${historyForm}" method="post" class="form-table">
+			
             <!-- カテゴリID・商品IDは hidden で保持 -->
             <input type="hidden" th:field="*{categoryId}" th:value="${selectedCategoryId}" />
             <input type="hidden" th:field="*{productId}" th:value="${selectedProductId}" />
@@ -73,16 +74,16 @@
             <!-- 入力欄：金額範囲 -->
             <div class="form-row">
                 <label>金額</label>
-                <input type="text" th:field="*{moneyFrom}" maxlength="6" /> ～
-                <input type="text" th:field="*{moneyTo}" maxlength="6" />
+                <input id="moneyFrom" type="text" th:field="*{moneyFrom}" maxlength="6" /> ～
+                <input id="moneyTo" type="text" th:field="*{moneyTo}" maxlength="6" />
             </div>
 
             <!-- 入力欄：日付範囲 -->
             <div class="form-row">
                 <label for="dateFrom">日付</label>
-                <input type="text" id="dateFrom" th:field="*{dateFrom}" placeholder="yyyy/MM/dd" />
+                <input id="dateFrom" type="text"  th:field="*{dateFrom}" placeholder="yyyy/MM/dd" />
                 ～
-                <input type="text" id="dateTo" th:field="*{dateTo}" placeholder="yyyy/MM/dd" />
+                <input id="dateTo" type="text"  th:field="*{dateTo}" placeholder="yyyy/MM/dd" />
             </div>
             
             <!-- ボタンエリア -->
@@ -108,19 +109,19 @@
                 <tr th:each="item : ${items}">
                     <td th:text="${item.categoryName}">カテゴリ</td>
                     <td th:text="${item.productName}">商品名</td>
-                    <td th:text="${item.amount + '¥'}">金額</td>
+					<td th:text="'¥' + ${#numbers.formatInteger(item.amount, 3, 'COMMA')}">金額</td>
                     <td th:text="${item.place}">場所</td>
                     <td th:text="${item.buyDate}">日付</td>
                 </tr>
 
-                <!-- データが5件未満の場合は空行で補完 -->
-                <tr th:each="i : ${#numbers.sequence(items.size() + 1, 5)}">
-                    <td>&nbsp;</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+				<!-- データが5件未満の場合のみ空行で補完 -->
+				<tr th:if="${items.size() < 5}" th:each="i : ${#numbers.sequence(items.size() + 1, 5)}">
+				    <td>&nbsp;</td>
+				    <td></td>
+				    <td></td>
+				    <td></td>
+				    <td></td>
+				</tr>
             </tbody>
         </table>
     </div>

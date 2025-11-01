@@ -24,19 +24,19 @@
             <!-- 入力欄：ユーザー名 -->
             <div>
                 <label>ユーザー名</label>
-                <input type="text" th:field="*{username}" maxlength="20" />
+                <input id="username" type="text" th:field="*{username}" maxlength="20" />
             </div>
 
             <!-- 入力欄：パスワード -->
             <div>
                 <label>パスワード</label>
-                <input type="password" th:field="*{password}" maxlength="8" />
+                <input id="password" type="password" th:field="*{password}" maxlength="8" />
             </div>
 
             <!-- 入力欄：確認用パスワード -->
             <div>
                 <label>確認用パスワード</label>
-                <input type="password" th:field="*{confirmPassword}" maxlength="8" />
+                <input id="confirmPassword" type="password" th:field="*{confirmPassword}" maxlength="8" />
             </div>
 
             <!-- ボタンエリア -->
@@ -47,7 +47,7 @@
 
         <!-- 戻るリンク -->
         <div>
-            <a th:href="@{/}" class="back-link">ログイン画面に戻る</a>
+            <a th:href="@{/Login}" class="back-link">ログイン画面に戻る</a>
         </div>
     </div>
 </body>

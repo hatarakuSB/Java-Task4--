@@ -37,20 +37,33 @@ public class InventoryController {
 	 * @return String 遷移先ビュー名
 	 */
 	@GetMapping(AppConstants.INVENTORY_URL)
-	public String showInventory(Model model, HttpSession session) {
+	public String showInventory(Model model, HttpSession session, RedirectAttributes redirectAttributes) {
 
 		// ログイン情報をセッションから取得
 		LoginDTO loginUser = (LoginDTO) session.getAttribute(AppConstants.SESSION_LOGIN_USER);
+		// ログイン情報取得に失敗時、ログイン画面に戻る
 		if (loginUser == null) {
+			redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE, AppConstants.MSG_SYSTEM_ERROR);
+			redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE_CLASS,AppConstants.MESSAGE_BOX_SYSTEM_ERROR);
 			return AppConstants.REDIRECT_LOGIN;
 		}
 		model.addAttribute(AppConstants.ATTR_LOGIN_USER, loginUser);
+
+		// 権限を設定
+		model.addAttribute(AppConstants.ATTR_AUTHORITY, loginUser.isAuthority());
 
 		// ページ名
 		model.addAttribute(AppConstants.ATTR_PAGE_TITLE, AppConstants.TITLE_INVENTORY);
 
 		// 在庫一覧を取得し、画面に渡す
 		List<InventoryDTO> inventoryList = inventoryService.getInventoryList(loginUser.getUserId());
+		// 在庫一覧取得に失敗時、ログイン画面に戻る
+		if (inventoryList == null) {
+			redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE, AppConstants.MSG_SYSTEM_ERROR);
+			redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE_CLASS,AppConstants.MESSAGE_BOX_SYSTEM_ERROR);
+			session.invalidate();
+			return AppConstants.REDIRECT_LOGIN;
+		}
 		model.addAttribute(AppConstants.ATTR_ITEMS, inventoryList);
 
 		return AppConstants.VIEW_INVENTORY;
@@ -71,7 +84,10 @@ public class InventoryController {
 
 		// ログイン情報をセッションから取得
 		LoginDTO loginUser = (LoginDTO) session.getAttribute(AppConstants.SESSION_LOGIN_USER);
+		// ログイン情報取得に失敗時、ログイン画面に戻る
 		if (loginUser == null) {
+			redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE, AppConstants.MSG_SYSTEM_ERROR);
+			redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE_CLASS,AppConstants.MESSAGE_BOX_SYSTEM_ERROR);
 			return AppConstants.REDIRECT_LOGIN;
 		}
 

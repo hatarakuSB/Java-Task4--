@@ -1,10 +1,8 @@
-/* 全体背景 */
 body {
-  background-color: orange; /* 統一テーマカラー */
+  background-color: orange; 
   font-family: "メイリオ", sans-serif;
 }
 
-/* コンテナ */
 .container {
   width: 500px;
   margin: 150px auto;
@@ -14,21 +12,18 @@ body {
   border-radius: 5px;
 }
 
-/* タイトル */
 h2 {
   font-size: 24px;
   text-align: center;
   margin-bottom: 20px;
 }
 
-/* ラベル */
 label {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
 }
 
-/* 入力欄 */
 input[type="text"],
 input[type="password"] {
   width: 95%;
@@ -38,7 +33,6 @@ input[type="password"] {
   border-radius: 4px;
 }
 
-/* ボタン */
 button {
   width: 100%;
   padding: 15px;
@@ -54,7 +48,6 @@ button:hover {
   background-color: darkorange;
 }
 
-/* 戻るリンク */
 .back-link {
   display: block;
   margin-top: 15px;
@@ -73,6 +66,7 @@ button:hover {
   border-radius: 5px;
   font-weight: bold;
 }
+
 .error-box {
   background-color: #ffe5e5;
   color: #c00;
@@ -81,6 +75,7 @@ button:hover {
   margin: 10px 0;
   border-radius: 5px;
 }
+
 .success-box {
   background-color: #e5ffe5;
   color: #080;

@@ -31,11 +31,6 @@ public class NewUserService {
             return AppConstants.MSG_NEW_USER_DUPLICATE;
         }
 
-        // パスワード一致チェック
-        if (!userForm.getPassword().equals(userForm.getConfirmPassword())) {
-            return AppConstants.MSG_NEW_USER_CONFIRM_PASSWORD_MISMATCH;
-        }
-
         // 登録処理
         userDAO.newUserInsert(userForm);
         return null;
