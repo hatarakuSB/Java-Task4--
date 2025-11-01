@@ -38,11 +38,6 @@ public class PasswordChangeService {
 			return AppConstants.MSG_PASSWORD_SAME_AS_OLD;
 		}
 
-		// 確認用パスワード一致チェック
-		if (!form.getNewPassword().equals(form.getConfirmPassword())) {
-			return AppConstants.MSG_PASSWORD_CONFIRM_MISMATCH;
-		}
-
 		// 更新処理
 		int updated = passwordChangeDAO.updatePassword(userId, form.getNewPassword());
 		if (updated == 0) {

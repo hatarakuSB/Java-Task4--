@@ -51,11 +51,10 @@ public class UserListService {
 
     /**
      * CSVファイルからユーザーをインポート
-     *
-     * @param file MultipartFile アップロードされたCSVファイル
-     * @throws IOException 入出力例外
      */
-    public void importUsersFromCsv(MultipartFile file) throws IOException {
+    public String importUsersFromCsv(MultipartFile file) throws IOException {
+        StringBuilder errorMessage = new StringBuilder();
+
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
 
@@ -69,15 +68,36 @@ public class UserListService {
 
                 String[] cols = line.split(",");
                 if (cols.length >= 3) {
-                    UserListDTO dto = new UserListDTO();
-                    dto.setUserId(Integer.parseInt(cols[0]));
-                    dto.setUserName(cols[1]);
-                    dto.setPassword(cols[2]);
+                    int userId = Integer.parseInt(cols[0]);
+                    String userName = cols[1];
+                    String password = cols[2];
 
-                    userListDAO.insert(dto); 
+                    // 重複チェック
+                    if (userListDAO.exists(userId, userName)) {
+                        // どちらが重複しているか個別に確認
+                        if (userListDAO.exists(userId, "")) {
+                            errorMessage.append(userId).append("は既にあるユーザーIDです。").append("<br>");
+                        }
+                        if (userListDAO.exists(0, userName)) {
+                        	errorMessage.append(userName).append("は既にあるユーザーネームです。").append("<br>");
+                        }
+                        continue;
+                    }
+
+                    // 登録
+                    UserListDTO dto = new UserListDTO();
+                    dto.setUserId(userId);
+                    dto.setUserName(userName);
+                    dto.setPassword(password);
+                    userListDAO.insert(dto);
                 }
             }
         }
+
+        if (errorMessage.length() > 0) {
+            return errorMessage.toString();
+        }
+        return null;
     }
 
     /**

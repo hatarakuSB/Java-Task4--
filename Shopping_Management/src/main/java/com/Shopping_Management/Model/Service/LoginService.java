@@ -29,8 +29,8 @@ public class LoginService {
 		// 入力フォームのユーザー名・パスワードでユーザー検索
 		LoginDTO loginUser = loginDAO.findByLoginForm(loginForm);
 
-		// 認証失敗 または 削除フラグが立っている場合は null を返す
-		if (loginUser == null || loginUser.isDeleteFlag()) {
+		// 認証失敗時、nullを返す
+		if (loginUser == null) {
 			return null;
 		}
 

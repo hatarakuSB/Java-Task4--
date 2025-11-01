@@ -34,6 +34,12 @@ public class LogoutController {
     public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
         // ユーザー情報を取得
         LoginDTO loginUser = (LoginDTO) session.getAttribute(AppConstants.SESSION_LOGIN_USER);
+		// ログイン情報取得に失敗時、ログイン画面に戻る
+		if (loginUser == null) {
+			redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE, AppConstants.MSG_SYSTEM_ERROR);
+			redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE_CLASS,AppConstants.MESSAGE_BOX_SYSTEM_ERROR);
+			return AppConstants.REDIRECT_LOGIN;
+		}
 
         if (loginUser != null) {
             // ログアウトログを記録
@@ -44,10 +50,10 @@ public class LogoutController {
         session.invalidate();
 
         // ログアウト完了メッセージをセット
-        redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE, AppConstants.MSG_LOGOUT_SUCCESS);
+        redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE, AppConstants.MSG_LOGOUT);
         redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE_CLASS, AppConstants.MESSAGE_BOX_LOGOUT);
 
         // ログイン画面へリダイレクト
-        return "redirect:" + AppConstants.LOGIN_URL;
+        return AppConstants.REDIRECT_LOGIN;
     }
 }

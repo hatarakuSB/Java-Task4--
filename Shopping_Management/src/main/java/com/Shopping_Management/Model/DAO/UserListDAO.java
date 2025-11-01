@@ -39,7 +39,7 @@ public class UserListDAO {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 
-		String sql = "SELECT USER_ID, USER_NAME, PASS_WORD FROM M_USER WHERE DELETE_FLAG = 0";
+		String sql = "SELECT USER_ID, USER_NAME, PASS_WORD FROM M_USER";
 
 		try {
 			connect();
@@ -86,19 +86,15 @@ public class UserListDAO {
 
 		try {
 			connect();
-			con.setAutoCommit(false); // トランザクション開始
+			con.setAutoCommit(false); 
 
-			// 商品詳細を削除
 			stmtDetail = con.prepareStatement(sqlDetail);
 			stmtDetail.setInt(1, userId);
 			stmtDetail.executeUpdate();
 
-			// ユーザーを削除
 			stmtUser = con.prepareStatement(sqlUser);
 			stmtUser.setInt(1, userId);
 			stmtUser.executeUpdate();
-
-			// コミット
 			con.commit();
 
 		} catch (Exception e) {
@@ -125,12 +121,44 @@ public class UserListDAO {
 	}
 
 	/**
+	 * 指定したユーザーIDまたはユーザー名が存在するかをチェック
+	 *
+	 * @param userId int
+	 * @param userName String
+	 * @return false 存在する場合はtrue
+	 */
+	public boolean exists(int userId, String userName) {
+		String sql = "SELECT COUNT(*) FROM M_USER WHERE USER_ID = ? OR USER_NAME = ?";
+		try {
+			connect();
+			PreparedStatement stmt = con.prepareStatement(sql);
+			stmt.setInt(1, userId);
+			stmt.setString(2, userName);
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				return rs.getInt(1) > 0;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * CSVインポート
 	 *
 	 * @param dto UserListDTO インポート対象ユーザー
 	 */
 	public void insert(UserListDTO dto) {
-		String sql = "INSERT IGNORE INTO M_USER (USER_ID, USER_NAME, PASS_WORD) VALUES (?, ?, ?)";
+		String sql = "INSERT INTO M_USER (USER_ID, USER_NAME, PASS_WORD) VALUES (?, ?, ?)";
 
 		try {
 			connect();

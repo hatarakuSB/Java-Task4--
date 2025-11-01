@@ -8,13 +8,8 @@ document.addEventListener("DOMContentLoaded", function () {
     form.addEventListener("submit", function (e) {
         let errors = [];
 
-        const productId = document.querySelector("input[name='productId']").value;
-        if (!productId) {
-            errors.push("商品名を選択してください");
-        }
-
-        const moneyFrom = document.querySelector("input[name='moneyFrom']").value.trim();
-        const moneyTo = document.querySelector("input[name='moneyTo']").value.trim();
+        const moneyFrom = document.getElementById("moneyFrom").value.trim();
+        const moneyTo = document.getElementById("moneyTo").value.trim();
         const moneyPattern = /^[0-9]*$/;
 
         if (!moneyFrom && moneyTo) {
@@ -33,8 +28,8 @@ document.addEventListener("DOMContentLoaded", function () {
             errors.push("金額（上限）は6桁以内で入力してください");
         }
 
-        const dateFrom = document.querySelector("#dateFrom").value.trim();
-        const dateTo = document.querySelector("#dateTo").value.trim();
+        const dateFrom = document.getElementById("dateFrom").value.trim();
+        const dateTo = document.getElementById("dateTo").value.trim();
         const datePattern = /^\d{4}\/\d{2}\/\d{2}$/; 
 
         if (!dateFrom && dateTo) {

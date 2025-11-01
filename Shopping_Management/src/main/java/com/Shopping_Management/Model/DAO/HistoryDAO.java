@@ -44,21 +44,19 @@ public class HistoryDAO {
         try {
             connect();
 
-            // SQLを組み立て
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT ");
             sql.append("    c.CATEGORY_NAME, ");
             sql.append("    p.PRODUCT_NAME, ");
             sql.append("    d.AMOUNT, ");
             sql.append("    d.PLACE, ");
-            sql.append("    d.DATE ");
+            sql.append("    DATE(d.DATE) AS BUY_DATE ");
             sql.append("FROM T_PRODUCT_DETAIL d ");
             sql.append("JOIN M_PRODUCT p ON d.PRODUCT_ID = p.PRODUCT_ID ");
             sql.append("JOIN M_CATEGORY c ON p.CATEGORY_ID = c.CATEGORY_ID ");
             sql.append("WHERE d.USER_ID = ? ");
             sql.append("  AND p.DELETE_FLAG = 0 ");
 
-            // 条件パラメータを動的に追加
             ArrayList<Object> params = new ArrayList<>();
             params.add(userId);
 
@@ -109,7 +107,7 @@ public class HistoryDAO {
                 dto.setProductName(rs.getString("PRODUCT_NAME"));
                 dto.setAmount(rs.getInt("AMOUNT"));
                 dto.setPlace(rs.getString("PLACE"));
-                dto.setBuyDate(rs.getString("DATE"));
+                dto.setBuyDate(rs.getDate("BUY_DATE").toLocalDate());
                 list.add(dto);
             }
 

@@ -29,6 +29,8 @@
                 <a th:href="@{/History}">履歴</a>
                 <a th:href="@{/Inventory}">在庫</a>
                 <a th:href="@{/PasswordChange}">パスワード変更</a>
+				<!-- 管理者のみ表示 -->
+				<a th:if="${authority}" th:href="@{/UserList}">ユーザー一覧</a>
             </div>
 
             <!-- ログインユーザー名 -->

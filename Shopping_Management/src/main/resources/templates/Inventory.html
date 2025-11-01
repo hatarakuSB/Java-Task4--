@@ -39,13 +39,14 @@
                             <td th:text="${item.latestDate}">日付</td>
                         </tr>
 
-                        <!-- データが5件未満の場合は空行で補完 -->
-                        <tr th:each="i : ${#numbers.sequence(items.size() + 1, 5)}">
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
+						<!-- データが5件未満の場合のみ空行で補完 -->
+						<tr th:if="${items.size() < 5}" th:each="i : ${#numbers.sequence(items.size() + 1, 5)}">
+						    <td>&nbsp;</td>
+						    <td></td>
+						    <td></td>
+						    <td></td>
+						    <td></td>
+						</tr>
                     </tbody>
                 </table>
             </div>

@@ -36,7 +36,7 @@ public class LoginDAO {
      * @return LoginDTO
      */
     public LoginDTO findByLoginForm(LoginForm loginForm) {
-        String sql = "SELECT USER_ID, USER_NAME, PASS_WORD, AUTHORITY, DELETE_FLAG "
+        String sql = "SELECT USER_ID, USER_NAME, PASS_WORD, AUTHORITY "
                    + "FROM M_USER WHERE USER_NAME = ? AND PASS_WORD = ?";
         LoginDTO dto = null;
 
@@ -54,7 +54,6 @@ public class LoginDAO {
                 dto.setUserName(rs.getString("USER_NAME"));
                 dto.setPassword(rs.getString("PASS_WORD"));
                 dto.setAuthority(rs.getBoolean("AUTHORITY"));
-                dto.setDeleteFlag(rs.getBoolean("DELETE_FLAG"));
             }
         } catch (Exception e) {
             e.printStackTrace();

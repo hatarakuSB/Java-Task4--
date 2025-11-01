@@ -1,4 +1,3 @@
-/* メイン領域全体 */
 .inventory-main {
     display: flex;
     flex-direction: column;
@@ -7,7 +6,6 @@
     width: 100%;
 }
 
-/* 在庫テーブルの外枠 */
 .result-container {
     display: flex;
     justify-content: center;
@@ -15,7 +13,6 @@
     width: 100%;
 }
 
-/* テーブル */
 .inventory-table {
     border-collapse: collapse;
     width: 90%;
@@ -25,53 +22,48 @@
     text-align: center;
 }
 
-/* ヘッダー */
 .inventory-table th {
     background-color: #f57c00;
     color: white;
     font-weight: bold;
-    padding: 0;            /* ← padding を消す */
+    padding: 0;            
     border: 1px solid #000;
-    height: 50px;          /* ← 高さを固定 */
+    height: 50px;          
     vertical-align: middle;
 }
 
-/* セル */
 .inventory-table td {
     border: 1px solid #000;
-    padding: 0;            /* ← padding を消す */
-    height: 50px;          /* ← ヘッダーと同じ高さに固定 */
+    padding: 0;            
+    height: 50px;         
     vertical-align: middle;
 }
 
-/* 偶数行に背景色 */
 .inventory-table tbody tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
-/* ---- 列幅調整 ---- */
 .inventory-table th:nth-child(1),
 .inventory-table td:nth-child(1) {
-    width: 60px;       /* チェックボックス列 */
+    width: 60px;
 }
 
 .inventory-table th:nth-child(2),
 .inventory-table td:nth-child(2) {
-    width: 200px;      /* カテゴリ列 */
+    width: 200px;
 }
 
 .inventory-table th:nth-child(3),
 .inventory-table td:nth-child(3) {
-    width: 250px;      /* 商品名列 */
+    width: 250px; 
 }
 
 .inventory-table th:nth-child(4),
 .inventory-table td:nth-child(4) {
-    width: 300px;      /* 日付列 */
-    white-space: nowrap; /* 折り返し禁止 */
+    width: 300px;      
+    white-space: nowrap;
 }
 
-/* 削除ボタン */
 .button-row {
     display: flex;
     justify-content: center;
@@ -92,7 +84,6 @@ button:hover {
     background-color: #e66b00;
 }
 
-/* ===== 共通メッセージエリア ===== */
 .message-box {
     padding: 10px;
     margin: 10px 20px;

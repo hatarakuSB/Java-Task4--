@@ -13,9 +13,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         if (!checked) {
-            e.preventDefault(); // フォーム送信を止める
+            e.preventDefault(); 
             messageBox.style.display = "block";
-            messageBox.className = "message-box error-box"; // ★ error 表示
+            messageBox.className = "message-box error-box"; 
             messageBox.textContent = "削除する商品を選択してください。";
         }
     });
