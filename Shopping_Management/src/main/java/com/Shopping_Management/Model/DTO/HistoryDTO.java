@@ -1,5 +1,7 @@
 package com.Shopping_Management.Model.DTO;
 
+import java.time.LocalDate;
+
 import lombok.Data;
 
 /**
@@ -24,5 +26,5 @@ public class HistoryDTO {
     private String place;
 
     /** 購入日 */
-    private String buyDate;
+    private LocalDate buyDate;
 }

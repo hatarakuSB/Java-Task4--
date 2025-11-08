@@ -33,8 +33,8 @@ public class LoginLogDAO {
 	 */
 	public void insertLog(Integer userId, String loginUserName, String eventTypeCode) {
 		String sql = "INSERT INTO T_LOGIN_LOG "
-				+ "(USER_ID, LOGIN_USER_NAME, LOG_EVENT_TYPE_CODE, LOG_EVENT_TIME, DELETE_FLAG) "
-				+ "VALUES (?, ?, ?, CURRENT_TIMESTAMP, 0)";
+				+ "(USER_ID, LOGIN_USER_NAME, LOG_EVENT_TYPE_CODE, LOG_EVENT_TIME) "
+				+ "VALUES (?, ?, ?, CURRENT_TIMESTAMP)";
 
 		try {
 			connect();

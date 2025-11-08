@@ -47,21 +47,35 @@ public class HistoryController {
 	@GetMapping(AppConstants.HISTORY_URL)
 	public String showHistoryForm(
 			@ModelAttribute(AppConstants.ATTR_HISTORY_FORM) HistoryForm historyForm,
+			RedirectAttributes redirectAttributes,
 			HttpSession session,
 			Model model) {
 
 		// セッションからログインユーザーを取得
 		LoginDTO loginUser = (LoginDTO) session.getAttribute(AppConstants.SESSION_LOGIN_USER);
+		// ログイン情報取得に失敗時、ログイン画面に戻る
 		if (loginUser == null) {
+			redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE, AppConstants.MSG_SYSTEM_ERROR);
+			redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE_CLASS,AppConstants.MESSAGE_BOX_SYSTEM_ERROR);
 			return AppConstants.REDIRECT_LOGIN;
 		}
 		model.addAttribute(AppConstants.ATTR_LOGIN_USER, loginUser);
 
+		// 権限を設定
+		model.addAttribute(AppConstants.ATTR_AUTHORITY, loginUser.isAuthority());
+		
 		// ページタイトルを設定
 		model.addAttribute(AppConstants.ATTR_PAGE_TITLE, AppConstants.TITLE_HISTORY);
 
 		// カテゴリ一覧を取得
 		List<CategoryDTO> categoryList = pullDownDAO.findAllCategories();
+		// カテゴリ一覧取得に失敗時、ログイン画面に戻る
+		if (categoryList.isEmpty()) {
+			redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE, AppConstants.MSG_SYSTEM_ERROR);
+			redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE_CLASS,AppConstants.MESSAGE_BOX_SYSTEM_ERROR);
+			session.invalidate();
+			return AppConstants.REDIRECT_LOGIN;
+		}
 		model.addAttribute(AppConstants.ATTR_CATEGORY_LIST, categoryList);
 
 		// 商品一覧（カテゴリ選択時のみ取得）
@@ -69,6 +83,13 @@ public class HistoryController {
 		if (historyForm.getCategoryId() != null) {
 			productList = pullDownDAO.findProductsByCategory(historyForm.getCategoryId());
 			model.addAttribute(AppConstants.ATTR_SELECTED_CATEGORY_ID, historyForm.getCategoryId());
+			// 商品一覧取得に失敗時、ログイン画面に戻る
+			if (productList.isEmpty()) {
+				redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE, AppConstants.MSG_SYSTEM_ERROR);
+				redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE_CLASS,AppConstants.MESSAGE_BOX_SYSTEM_ERROR);
+				session.invalidate();
+				return AppConstants.REDIRECT_LOGIN;
+			}
 		}
 		model.addAttribute(AppConstants.ATTR_PRODUCT_LIST, productList);
 
@@ -102,7 +123,11 @@ public class HistoryController {
 
 		// セッションからログインユーザーを取得
 		LoginDTO loginUser = (LoginDTO) session.getAttribute(AppConstants.SESSION_LOGIN_USER);
+		// ログイン情報取得に失敗時、ログイン画面に戻る
 		if (loginUser == null) {
+			redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE, AppConstants.MSG_SYSTEM_ERROR);
+			redirectAttributes.addFlashAttribute(AppConstants.ATTR_MESSAGE_CLASS,AppConstants.MESSAGE_BOX_SYSTEM_ERROR);
+			session.invalidate();
 			return AppConstants.REDIRECT_LOGIN;
 		}
 

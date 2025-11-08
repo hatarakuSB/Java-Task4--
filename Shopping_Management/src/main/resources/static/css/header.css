@@ -1,4 +1,3 @@
-/* ヘッダー全体 */
 body {
     margin: 0;
 }
@@ -6,13 +5,12 @@ body {
     background-color: #f57c00;
     color: white;
     display: flex;
-    justify-content: space-between; /* 左右に分ける */
-    align-items: center;            /* 高さを揃える */
+    justify-content: space-between; 
+    align-items: center; 
     padding: 10px 20px;
     font-size: 18px;
 }
 
-/* 左エリア */
 .left-area {
     display: flex;
     align-items: center;
@@ -22,14 +20,12 @@ body {
     font-weight: bold;
 }
 
-/* 右エリア */
 .right-area {
     display: flex;
-    flex-direction: column;         /* 上下 */
-    align-items: flex-end;          /* 右端に寄せる */
+    flex-direction: column;
+    align-items: flex-end;          
 }
 
-/* 上部（ログアウト） */
 .top-right {
     font-size: 18px;
 	
@@ -38,23 +34,21 @@ body {
     color: white;
 	text-decoration: none;
 	font-size: 18px;
-	margin-bottom: 10px; /* ← この値で間隔を調整 */
+	margin-bottom: 10px;
 }
 
-/* メニュー */
 .menu {
     background-color: #f57c00;
     padding: 8px 20px;
 	
 	display: flex;
-	justify-content: space-between; /* 左右に分ける */
+	justify-content: space-between;
 	align-items: center;
 }
 
-/* 左側リンク群 */
 .menu-links {
     display: flex;
-    gap: 15px; /* リンク間の余白 */
+    gap: 15px; 
 }
 
 .menu a {
@@ -67,7 +61,6 @@ body {
     text-decoration: underline;
 }
 
-/* 右側ユーザー名 */
 .user-name {
     font-size: 18px;
     font-weight: bold;
@@ -75,16 +68,17 @@ body {
 }
 
 .divider {
-	border-bottom: 1px solid white;  /* 黒い線だけ */
-	    background-color: #f57c00;      /* オレンジ背景維持 */
-	    height: 1px;                    /* 線の太さ調整可能 */
-	    margin: 0;
+	border-bottom: 1px solid white;  
+	background-color: #f57c00;     
+	height: 1px;                   
+	margin: 0;
 }
 
 .page-title {
-    background-color: #f57c00;  /* ヘッダーと同じ色 */
+    background-color: #f57c00; 
     color: white;
     padding: 5px 20px;
     font-size: 16px;
     font-weight: bold;
 }
+

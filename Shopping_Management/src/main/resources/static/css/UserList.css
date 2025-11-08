@@ -1,26 +1,20 @@
-@charset "UTF-8";
-
-/* 全体 */
 body {
-  background-color: #fff;
-  font-family: "メイリオ", sans-serif;
-  margin: 0;
-  padding: 0;
-}
+ margin: 0;
+ padding: 0;
+ background-color: #fff;}
 
-/* レイアウト：テーブルとCSVボタンを横並び */
 .userlist-container {
   display: flex;
-  gap: 40px;              /* テーブルとボタンの間隔 */
-  align-items: flex-start; /* 上端を揃える */
-  justify-content: center; /* 中央寄せ */
-  margin-top: 30px;
+  gap: 40px;             
+  align-items: flex-start; 
+  justify-content: center; 
+  margin: 30px auto 0 auto;
+  width: fit-content;
 }
 
-/* ユーザー一覧テーブル */
 #tblUsers {
   border-collapse: collapse;
-  width: 600px; /* テーブル全体幅 */
+  width: 600px; 
 }
 
 #tblUsers th,
@@ -28,7 +22,7 @@ body {
   border: 1px solid #000;
   text-align: center;
   padding: 8px;
-  white-space: nowrap; /* 改行させない */
+  white-space: nowrap; 
 }
 
 #tblUsers th {
@@ -43,15 +37,14 @@ body {
 }
 #tblUsers th:nth-child(2),
 #tblUsers td:nth-child(2) {
-  width: 200px; /* ユーザー名 */
+  width: 200px; 
 }
 
 #tblUsers th:nth-child(3),
 #tblUsers td:nth-child(3) {
-  width: 200px; /* パスワード */
+  width: 200px; 
 }
 
-/* 削除ボタン */
 .delete-btn-wrapper {
   text-align: center;
   margin-top: 15px;
@@ -70,11 +63,10 @@ body {
   background-color: #e66b00;
 }
 
-/* CSV ボタン縦並び */
 .csv-buttons {
   display: flex;
   flex-direction: column;
-  gap: 15px;  /* ボタン間の余白 */
+  gap: 15px;  
 }
 
 .csv-buttons button {
@@ -89,7 +81,6 @@ body {
   background: #f1f1f1;
 }
 
-/* 共通メッセージ枠 */
 .message-box {
   padding: 10px;
   margin: 10px 20px;

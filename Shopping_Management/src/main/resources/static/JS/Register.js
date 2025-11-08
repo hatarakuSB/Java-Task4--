@@ -1,12 +1,11 @@
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("registerForm");
     const messageBox = document.getElementById("messageBox");
-
-    const categoryId = document.querySelector("input[name='categoryId']");
-    const productId = document.querySelector("input[name='productId']");
-    const amount = document.querySelector("input[name='amount']");
-    const place = document.querySelector("input[name='place']");
-    const buyDate = document.querySelector("input[name='buyDate']");
+    const categoryId = document.getElementById("categoryId");
+    const productId = document.getElementById("productId");
+    const amount = document.getElementById("amount");
+    const place = document.getElementById("place");
+    const buyDate = document.getElementById("buyDate");
 
     form.addEventListener("submit", function (e) {
         let errors = [];

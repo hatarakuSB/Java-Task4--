@@ -19,7 +19,4 @@ public class LoginDTO {
 
     /** 権限 */
     private boolean authority;
-
-    /** 削除フラグ */
-    private boolean deleteFlag;
 }

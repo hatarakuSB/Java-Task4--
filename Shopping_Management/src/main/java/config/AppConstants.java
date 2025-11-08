@@ -69,7 +69,8 @@ public class AppConstants {
 
 	//共通メッセージ
 	public static final String MSG_LOGIN_FAILED = "ユーザー名またはパスワードが違います";
-	public static final String MSG_LOGOUT_SUCCESS = "ログアウトされました";
+	public static final String MSG_LOGOUT = "ログアウトされました";
+	public static final String MSG_SYSTEM_ERROR = "システムエラーが起きました。ログイン画面に戻ります。";
 
 	//新規ユーザーメッセージ
 	public static final String MSG_NEW_USER_SUCCESS = "登録が完了しました";
@@ -84,8 +85,7 @@ public class AppConstants {
 	public static final String MSG_PASSWORD_CHANGE_SUCCESS = "パスワードを変更しました";
 	public static final String MSG_PASSWORD_CHANGE_FAILED = "パスワードの変更に失敗しました";
 	public static final String MSG_PASSWORD_INVALID_CURRENT = "現在のパスワードが正しくありません";
-	public static final String MSG_PASSWORD_SAME_AS_OLD = "新しいパスワードは現在のものと異なるパスワードに設定してください";
-	public static final String MSG_PASSWORD_CONFIRM_MISMATCH = "新規パスワードと確認用パスワードが一致しません";
+	public static final String MSG_PASSWORD_SAME_AS_OLD = "新しいパスワードは現在のパスワードと異なるパスワードに設定してください";
 
 	//履歴画面メッセージ
 	public static final String MSG_HISTORY_INVALID_MONEY_RANGE = "金額（下限）は金額（上限）以下を入力してください。";
@@ -98,6 +98,7 @@ public class AppConstants {
 	public static final String MSG_INVENTORY_DELETE_FAILED = "削除処理でエラーが発生しました。";
 
 	//ユーザー一覧メッセージ
+	public static final String MSG_USER_LIST_DELETE_SUCCESS ="ユーザーの削除が完了しました。";
 	public static final String MSG_CSV_IMPORT_SUCCESS = "CSVインポートが完了しました";
 	public static final String MSG_CSV_IMPORT_FAILED = "CSVインポートに失敗しました";
 	public static final String MSG_USER_LIST_FILE_EMPTY = "ファイルを選択してください。";
@@ -117,6 +118,8 @@ public class AppConstants {
 	public static final String MESSAGE_BOX_ERROR = "message-box error-box";
 	public static final String MESSAGE_BOX_SUCCESS = "message-box success-box";
 	public static final String MESSAGE_BOX_LOGOUT = "message-box logout-box";
+	public static final String MESSAGE_BOX_SYSTEM_ERROR = "message-box system_error-box";
+
 
 	//リクエストパラメータキー
 	public static final String PARAM_CATEGORY_ID = "categoryId";
